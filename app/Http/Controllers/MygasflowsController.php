@@ -58,7 +58,7 @@ class MygasflowsController extends Controller
 
 		// pass data it to the view
 
-	    return view('gasflows.mygasflows', ['route' => 'mygasflows',
+	    return view('GasFlows.mygasflows', ['route' => 'mygasflows',
 	                                'header_title'	=> 'My BioRector Gas Flows ',
 		                             'id'				=> $id,
 									 'bioreactor'		=> $bioreactor,

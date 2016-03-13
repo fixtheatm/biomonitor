@@ -58,7 +58,7 @@ class MylightreadingsController extends Controller
 
 		// pass data it to the view
 
-	    return view('lightreadings.mylightreadings', ['route' => 'mylightreadings',
+	    return view('LightReadings.mylightreadings', ['route' => 'mylightreadings',
 	                                'header_title'	=> 'My BioRector Light Readings ',
 		                             'id'				=> $id,
 									 'bioreactor'		=> $bioreactor,

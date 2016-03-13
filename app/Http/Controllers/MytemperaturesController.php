@@ -58,7 +58,7 @@ class MytemperaturesController extends Controller
 
 		// pass data it to the view
 
-	    return view('temperatures.mytemperatures', ['route' => 'mytemperatures',
+	    return view('Temperatures.mytemperatures', ['route' => 'mytemperatures',
 	                                'header_title'	=> 'My BioRector Temperatures ',
 		                             'id'				=> $id,
 									 'bioreactor'		=> $bioreactor,
