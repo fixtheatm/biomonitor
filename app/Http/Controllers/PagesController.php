@@ -19,7 +19,7 @@ class PagesController extends Controller
 {
 	public function about() {	// resources/views/pages/about.blade.php
 
-	    return view('pages.about', ['route' => 'about',
+	    return view('Pages.about', ['route' => 'about',
 		                            'header_title'	=> 'About BioMonitor']);	
 	}
 
