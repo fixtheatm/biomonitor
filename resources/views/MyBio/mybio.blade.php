@@ -99,11 +99,11 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
-@include('temperatures.common_temperature_charts')
+@include('Temperatures.common_temperature_charts')
 
-@include('lightreadings.common_lightreading_charts')
+@include('LightReadings.common_lightreading_charts')
 
-@include('gasflows.common_gasflow_charts')
+@include('GasFlows.common_gasflow_charts')
 
 @include('common_single_map')
 
