@@ -27,7 +27,7 @@ class MybioController extends Controller
 	 *
 	 *
 	 */
-	public function index() {	// resources/views/pages/mybio.blade.php
+	public function index() {	
 
 		// the deviceid should not be blank or bogus as 
 		// it is from the user record enforced with a foreign key constraint
@@ -71,7 +71,7 @@ class MybioController extends Controller
 
 		// pass data it to the view
 
-	    return view('mybio.mybio', ['route' => 'mybio',
+	    return view('Mybio.mybio', ['route' => 'mybio',
 		                             'id'				=> $id,
 	                                 'header_title'	=> 'My BioReactor Status',
 									 'bioreactor'		=> $bioreactor,
