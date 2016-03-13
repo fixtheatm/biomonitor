@@ -56,7 +56,7 @@ class GlobalController extends Controller
 
 		//dd($bioreactors->toJson());
 
-	    return view('global.index', ['route'			=> 'global',
+	    return view('Global.index', ['route'			=> 'global',
 		                             'header_title'		=> 'Global BioReactor Status',
 									 'dbdata'			=> $bioreactors
 									]);	
@@ -111,7 +111,7 @@ class GlobalController extends Controller
 
 		// pass data it to the view
 
-	    return view('global.show', [ 'route'			=> 'single',
+	    return view('Global.show', [ 'route'			=> 'single',
 		                             'id'				=> $id,
 	                                 'header_title'		=> 'Single BioReactor Status',
 									 'bioreactor'		=> $bioreactor,
