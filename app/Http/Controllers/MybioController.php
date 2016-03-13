@@ -71,7 +71,7 @@ class MybioController extends Controller
 
 		// pass data it to the view
 
-	    return view('Mybio.mybio', ['route' => 'mybio',
+	    return view('MyBio.mybio', ['route' => 'mybio',
 		                             'id'				=> $id,
 	                                 'header_title'	=> 'My BioReactor Status',
 									 'bioreactor'		=> $bioreactor,
