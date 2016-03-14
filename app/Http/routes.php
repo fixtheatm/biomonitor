@@ -32,6 +32,11 @@ Route::get('/addusers',			'TestDataController@addusers');
 
 Route::get('/api',				'ApiController@api');
 
+Route::get('user', 
+  ['as' => 'user', 'uses' => 'UserController@create']);
+Route::post('user', 
+  ['as' => 'user_store', 'uses' => 'UserController@store']);
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
