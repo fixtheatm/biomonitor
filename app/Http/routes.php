@@ -63,6 +63,10 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/mygasflows/{hrs}',		'MygasflowsController@index' );
     Route::get('/mygasflows',			'MygasflowsController@index' );
 
+    Route::get('/users',				'UserController@index' );
+    Route::get('/user/{id}',			'UserController@show' );
+    Route::post('/user/{user}',			'UserController@update' );
+
 	Route::get('/about',				'PagesController@about' );
 
 });
