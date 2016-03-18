@@ -32,10 +32,6 @@ Route::get('/addusers',			'TestDataController@addusers');
 
 Route::get('/api',				'ApiController@api');
 
-Route::get('user', 
-  ['as' => 'user', 'uses' => 'UserController@create']);
-Route::post('user', 
-  ['as' => 'user_store', 'uses' => 'UserController@store']);
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +62,12 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/users',				'UserController@index' );
     Route::get('/user/{id}',			'UserController@show' );
     Route::post('/user/{user}',			'UserController@update' );
+    Route::get('/user',					'UserController@create' );
+    Route::post('/user',				'UserController@update' );
+
+    Route::get('/password',				'PasswordController@show' );
+    Route::post('/password',			'PasswordController@update' );
+
 
 	Route::get('/about',				'PagesController@about' );
 

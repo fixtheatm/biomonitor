@@ -26,6 +26,16 @@
               'placeholder'=>'E-mail address')) !!}
 </div>
 
+@if ($user->id < '1')
+<div class="form-group">
+    {!! Form::label('Password') !!}
+    {!! Form::text('password', null, 
+        array('required', 
+              'class'=>'form-control', 
+              'placeholder'=>'Password')) !!}
+</div>
+@endif
+
 <div class="form-group">
     {!! Form::label('Administrator') !!}
 	{!! Form::checkbox('isadmin') !!}

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Hash;
 use App\User;
+use Carbon\Carbon;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -55,7 +56,14 @@ class UserController extends Controller
 
 	public function create()
     {
-        return view('User.user');
+		$user = new User();
+
+		$user->setDefaultPassword();
+
+	    return view('User.user', [	'route'				=> 'user',
+ 									'header_title'		=> 'Add User',
+									'user'				=> $user
+								]);	
     }
 
     public function update(Request $request)
@@ -72,22 +80,27 @@ class UserController extends Controller
 				dd($message);
 				//return Redirect::to('error')->with('message', $message);
 			}
-			$user->name = $request->name;
-			$user->email = $request->email;
-			$user->deviceid = $request->deviceid;
-
-			if ($request->isadmin===null)
-				$user->isadmin='0';
-			else
-				$user->isadmin='1';
-
-			//dd($user);
-
-			$user->save();
-
-			return redirect('/users');
 		}
 		else {
+			$user = new User();
+			$user->password = Hash::make($request->password);
 		}
+
+		$user->name = $request->name;
+		$user->email = $request->email;
+		$user->deviceid = $request->deviceid;
+
+		if ($request->isadmin===null)
+			$user->isadmin='0';
+		else
+			$user->isadmin='1';
+
+		$user->updated_at = Carbon::now();
+
+		//dd($user);
+
+		$user->save();
+
+		return redirect('/users');
 	}
 }
