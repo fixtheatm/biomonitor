@@ -149,6 +149,8 @@ return [
         Illuminate\View\ViewServiceProvider::class,
 		//Illuminate\Html\HtmlServiceProvider,
 		'Collective\Html\HtmlServiceProvider',
+		'Maatwebsite\Excel\ExcelServiceProvider',
+
 
         /*
          * Application Service Providers...
@@ -206,7 +208,8 @@ return [
 		//'Form'		=> Illuminate\Html\FormFacade,
 		//'Html'		=> Illuminate\Html\HtmlFacade,
 		'Form' => 'Collective\Html\FormFacade',
-        'Html' => 'Collective\Html\HtmlFacade'
+        'Html' => 'Collective\Html\HtmlFacade',
+		'Excel' => 'Maatwebsite\Excel\Facades\Excel',
 
     ],
 

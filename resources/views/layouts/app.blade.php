@@ -46,6 +46,7 @@
          <li @if ( isset($route) && $route == "global") class="active" @endif><a href="{{ url('/global') }}">Global</a></li>
 			@if (Auth::user()->isadmin)
 	         <li @if ( isset($route) && $route == "users") class="active" @endif><a href="{{ url('/users') }}">Users</a></li>
+	         <li @if ( isset($route) && $route == "bioreactors") class="active" @endif><a href="{{ url('/bioreactors') }}">Bioreactors</a></li>
  			@endif
 		@endif
         <li @if ( isset($route) && $route == "about") class="active" @endif><a href="{{ url('/about') }}">About</a></li>

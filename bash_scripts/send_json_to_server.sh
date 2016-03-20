@@ -22,7 +22,7 @@ fi
 
 # name of the server we are posting to.
 # 
-SERVER="bioreactor.dev"
+SERVER="laravel.dev"
 
 # root folder where are json files are being stored
 # on Windows we are using "./" On the raspberry pi it will be "/usr/local/bin/bioreactor/"

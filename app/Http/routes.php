@@ -1,12 +1,15 @@
 <?php
 
-//use App\User;
+use App\User;
 //use App\Bioreactor;
 //use App\Temperature;
 //use App\Lightreading;
 //use App\Gasflow;
 
 //use Illuminate\Http\Request;
+
+//use Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +35,21 @@ Route::get('/addusers',			'TestDataController@addusers');
 
 Route::get('/api',				'ApiController@api');
 
+/**
+* Under development
+*
+*/
+function userIsAdmin()
+{
+	// get the record of the logged in user
+	// and make sure they are an admin
+
+	//if ( !Auth::user()->isadmin )
+	{
+		$message = 'Sorry! You are NOT an admin and cannot perform this function';
+		dd($message);
+	}
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -64,11 +82,25 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/user/{user}',			'UserController@update' );
     Route::get('/user',					'UserController@create' );
     Route::post('/user',				'UserController@update' );
+    Route::get('/user/delete/{id}',		'UserController@delete' );
 
     Route::get('/password',				'PasswordController@show' );
     Route::post('/password',			'PasswordController@update' );
 
 
 	Route::get('/about',				'PagesController@about' );
+
+
+	// All the routes below this point are only for admins
+	//userIsAdmin();
+
+	
+    Route::get('/bioreactors',				'BioreactorController@index' );
+    Route::get('/bioreactor/{id}',			'BioreactorController@show' );
+    Route::post('/bioreactor/{bioreactor}',	'BioreactorController@update' );
+    Route::get('/bioreactor',				'BioreactorController@create' );
+    Route::post('/bioreactor',				'BioreactorController@update' );
+    Route::get('/bioreactor/delete/{id}',	'BioreactorController@delete' );
+
 
 });

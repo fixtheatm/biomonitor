@@ -12,7 +12,8 @@
 
 {!! Form::model($user, array('class' => 'form', 'name' => 'ChangePassword')) !!}
 
-<input name="GoBackTo" type="hidden" value="{{ URL::previous() }}">
+<input name="GoBackTo" type="hidden" value="{{ URL::previous() }}">
+
 <div class="form-group">
     {!! Form::label('New Password') !!}
     {!! Form::password('password1', array('id' => 'password1')) !!}

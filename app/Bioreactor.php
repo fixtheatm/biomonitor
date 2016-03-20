@@ -15,4 +15,29 @@ class Bioreactor extends Model
 	public static function formatDeviceid($id) {
 		return sprintf("%05d", $id);
 	}
+
+	/**
+	 * Attempts to suggest the next deviceid for a new bioreactor
+	 * Gets the highest deviceid and then adds one to the deviceid
+	 *
+	 * @return string - the suggested deviceid ex. 00008
+	 */
+	public function getNextDeviceID()
+	{
+		try {
+			$bioreactor = Bioreactor::orderBy('deviceid', 'desc')->first();
+		}
+		catch (\Exception $e) {
+			// no records ??
+
+			return $this->formatDeviceid(1);
+		}	
+		if ( is_numeric($bioreactor->deviceid)) {
+			return $this->formatDeviceid($bioreactor->deviceid + 1);
+		}
+		else {
+			return $this->formatDeviceid(1);
+		}		
+	}
+			
 }

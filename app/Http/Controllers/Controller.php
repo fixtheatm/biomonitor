@@ -190,15 +190,6 @@ class Controller extends BaseController
 
 		//dd($last_time->toDateTimeString());
 
-		// GHS just keeping this around to remember to understand lists
-		//$user_info = DB::table('usermetas')
-        //     ->select('browser', DB::raw('count(*) as total'))
-        //     ->groupBy('browser')
-        //     ->lists('total','browser')->all();
-		//somewhere in your view to use a list in a select
-		//$categories = Category::lists('title', 'id');
-		//{{ Form::select('category', $categories) }}
-
 
 		// load the temperature data for this site
 		try {

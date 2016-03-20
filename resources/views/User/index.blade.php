@@ -14,6 +14,7 @@
 				<thead>
 					<tr class="info">
 						<th>Edit</th>
+						<th>Del</th>
 						<th>Name</th>
 						<th>Email</th>
 						<th>Device ID</th>
@@ -26,6 +27,7 @@
 				@foreach ($dbdata as $user)
 					<tr>
 					    <td><a href="/user/{{ $user->id }}"><button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-pencil"></span></button></a></td>
+						<td><a href="/user/delete/{{ $user->id }}"><button type="button" class="btn btn-success btn-xs" onClick='return(deleteOkPrompt("{{ $user->name }}","{{ $user->email }}"))'><span class="glyphicon glyphicon-remove"></span></button></a></td>
 						<td>{{ $user->name }}</td>
 						<td>{{ $user->email }}</td>
 						<td>{{ $user->deviceid }}</td>
@@ -42,4 +44,20 @@
 		</div>
 	</div>
 </div>
+@stop
+
+@section('footer_js')
+<script type="text/javascript">
+function deleteOkPrompt(name, email)
+{
+	if (confirm('Are you sure you want to delete this user?\nName ['+name+']\nEmail ['+email+']')) {
+		// do it!
+		return true;
+	} else {
+	    // Do nothing!
+		return false;
+	}
+	return false;
+}
+</script>
 @stop

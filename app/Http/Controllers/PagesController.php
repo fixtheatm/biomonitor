@@ -24,6 +24,30 @@ class PagesController extends Controller
 	}
 
 	/**
+	* Update the Biorector record for the give deviceid. Set the 
+	*  last_datasync_at column to the passed in datetime
+	*
+	* @param $deviceid the device id of the bioreactor from the json data
+    * @param $now the carbon datetime stamp used for the temp,gas or light records       
+	*
+	*/
+	public function updateBioreactorLastDatasync($deviceid, $now) {
+	
+		// load the record from the table
+		try {
+			$bioreactor = Bioreactor::where('deviceid', '=', $deviceid)->firstOrFail();
+		}
+		catch (\Exception $e) {
+			return;
+		}
+
+		$bioreactor->last_datasync_at = $now->toDateTimeString();
+
+		$bioreactor->save();
+	
+	}
+
+	/**
 	*  Process multiple json temperature records arriving from
 	*   the Raspberrry Pi. Would normally expect 1 at a time (??)
 	*
@@ -43,9 +67,15 @@ class PagesController extends Controller
 		// datestamp the incoming data records	
 		$now = Carbon::now();
 
+		// there will be only 1 deviceid in the package of records
+
+		$deviceid='';
+
 		foreach( $json_data as $data) {
+			$deviceid = $data['deviceid'];
+
 			$temperature = new Temperature();
-			$temperature->deviceid = $data['deviceid'];
+			$temperature->deviceid = $deviceid;
 			$temperature->temperature = $data['temperature'];
 			$temperature->recorded_on =  $data['recorded_on'];
 			$temperature->created_at = $now->toDateTimeString();
@@ -53,10 +83,12 @@ class PagesController extends Controller
 			$temperature->save();
 		}
 
+		// just in case the data package was damaged or empty
+		if ($deviceid != '') {
+			$this->updateBioreactorLastDatasync($deviceid, $now);
+		}
 
-		//$deviceid = $arr[0]['deviceid'];
-		//$temperature = $arr[0]['temperature'];
-
+			
 		return Response::json( array('additions' => ['records'=>sizeof($json_data)] , 200 ) );
 	}
 
@@ -80,9 +112,15 @@ class PagesController extends Controller
 		// datestamp the incoming data records	
 		$now = Carbon::now();
 
+		// there will be only 1 deviceid in the package of records
+
+		$deviceid='';
+
 		foreach( $json_data as $data) {
+			$deviceid = $data['deviceid'];
+
 			$gasflow = new Gasflow();
-			$gasflow->deviceid = $data['deviceid'];
+			$gasflow->deviceid = $deviceid;
 			$gasflow->flow = $data['flow'];
 			$gasflow->recorded_on =  $data['recorded_on'];
 			$gasflow->created_at = $now->toDateTimeString();
@@ -91,8 +129,10 @@ class PagesController extends Controller
 		}
 
 
-		//$deviceid = $arr[0]['deviceid'];
-		//$temperature = $arr[0]['flow'];
+		// just in case the data package was damaged or empty
+		if ($deviceid != '') {
+			$this->updateBioreactorLastDatasync($deviceid, $now);
+		}
 
 		return Response::json( array('additions' => ['records'=>sizeof($json_data)] , 200 ) );
 	}
@@ -117,9 +157,15 @@ class PagesController extends Controller
 		// datestamp the incoming data records	
 		$now = Carbon::now();
 
+		// there will be only 1 deviceid in the package of records
+
+		$deviceid='';
+
 		foreach( $json_data as $data) {
+			$deviceid = $data['deviceid'];
+
 			$lightreading = new Lightreading();
-			$lightreading->deviceid = $data['deviceid'];
+			$lightreading->deviceid = $deviceid;
 			$lightreading->lux = $data['lux'];
 			$lightreading->recorded_on =  $data['recorded_on'];
 			$lightreading->created_at = $now->toDateTimeString();
@@ -127,9 +173,10 @@ class PagesController extends Controller
 			$lightreading->save();
 		}
 
-
-		//$deviceid = $arr[0]['deviceid'];
-		//$temperature = $arr[0]['temperature'];
+		// just in case the data package was damaged or empty
+		if ($deviceid != '') {
+			$this->updateBioreactorLastDatasync($deviceid, $now);
+		}
 
 		return Response::json( array('additions' => ['records'=>sizeof($json_data)] , 200 ) );
 	}

@@ -70,4 +70,27 @@ class MytemperaturesController extends Controller
 
     }
 
+	public function generateCSVDownload($hrs=3) {
+	
+	    //dd($hrs);
+
+		// the deviceid should not be blank or bogus as 
+		// it is from the user record enforced with a foreign key constraint
+
+		$id = Auth::user()->deviceid;
+		//dd($id);
+
+		// load the record from the table
+		$bioreactor = $this->getBioreactorFromId($id);
+		//dd($bioreactor);
+
+		// load the temperature data for this site
+		// returns recorded_on date of last (most recent) record
+
+		$end_datetime = $this->getTemperatureData($id, $hrs);
+
+
+	}
+	//return response()->download($pathToFile, $name, $headers);
+
 }

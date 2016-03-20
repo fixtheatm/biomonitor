@@ -2,7 +2,11 @@
 
 @section('content')
 
-<div class="panel panel-default" style="border-color:blue;width:600px">
+<div class="panel panel-primary" style="width:600px">
+	<div class="panel-heading">
+	 {{ $header_title }}
+	</div>
+
 	<div class="panel-body">
 
 
@@ -43,7 +47,7 @@
 
 <div class="form-group">
     {!! Form::label('BioReactor') !!}
-	{!! Form::select('deviceid', array('00001' => '00001 St Paul High School', '00002' => '00002 University of Calgary', '00003' => '00003 Elmira High School') ) !!}
+	{!! Form::select('deviceid', $bioreactors ) !!}
 </div>
 
 <div class="form-group">

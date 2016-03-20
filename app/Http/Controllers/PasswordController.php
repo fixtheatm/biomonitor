@@ -13,9 +13,14 @@ use App\Http\Controllers\Controller;
 
 class PasswordController extends Controller
 {
+	/**
+	 * Show the current logged in user record for editing
+	 * They can only set the password
+	 *
+	 */
 	public function show()
 	{
-
+		// get the record of the logged in user
 		$user = Auth::user();
 
 		//dd($user);
@@ -27,17 +32,31 @@ class PasswordController extends Controller
 	
 	}
 
+	/**
+	 * Process a post from editing the logged in user 
+	 *  
+	 *
+	 * @param Request $request the posted data 
+	 */
 	public function update(Request $request)
 	{
+		// get the record of the logged in user
 		$user = Auth::user();
 
+		// hash the new password
 		$user->password = Hash::make($request->password1);
+
+		// set the last updated date to now
 		$user->updated_at = Carbon::now();
 
 		//dd ($request->GoBackTo);
 
 		$user->save();
 
+		// the location of the redirect is variable
+		// depending on whether the user is changing their own password
+		// of the admin is doing it from the global user list
+		//
 		return redirect($request->GoBackTo);
 	
 	}
