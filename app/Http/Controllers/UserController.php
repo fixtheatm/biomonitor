@@ -9,6 +9,7 @@ use App\User;
 use App\Bioreactor;
 use Carbon\Carbon;
 use DB;
+use Excel;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -33,6 +34,44 @@ class UserController extends Controller
 		                             'header_title'		=> 'All Users',
 									 'dbdata'			=> $users
 									]);	
+	}
+
+	/**
+	 * Download all users as Excel spreadsheet. Only available if the logged in user
+	 * is an admin
+	 *
+	 *
+	 */
+	public function excel() {	
+
+		// get all the users to show
+
+		//$users = User::all();
+		//dd($users);
+
+		$users = User::select('name', 'email', 'deviceid', 'isadmin', 'created_at', 'updated_at')->get();
+
+		Excel::create('users', function($excel) use ($users) {
+
+			// Set the title
+			$excel->setTitle('User List');
+
+			// Chain the setters
+			$excel->setCreator('Solar BioCells')
+					->setCompany('Solar BioCells');
+
+			// Call them separately
+			$excel->setDescription('List of users registered for Bioreactor login');
+
+
+			$excel->sheet('User List', function ($sheet) use ($users) {
+				$sheet->row(1, array('Name', 'Email', 'BioReactor ID', 'Admin?','Created On', 'Last Updated'));
+
+				$sheet->fromArray($users, null, 'A2', false, false);
+			});
+
+		})->export('xls');
+
 	}
 
 	/**

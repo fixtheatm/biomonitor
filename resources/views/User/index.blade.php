@@ -6,6 +6,8 @@
 	<div class="panel-body">
 		<div style="margin-left:8px;margin-bottom:5px">
 			<a href="/user"><button type="button" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus"></span></button></a>
+			&nbsp;&nbsp;
+			<a href="/users/excel"><button type="button" class="btn btn-success btn-sm">Excel&nbsp;<span class="glyphicon glyphicon-download-alt"></span></button></a>
 		</div>
 		<div class="tab-content">
 

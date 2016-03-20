@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Hash;
 use App\Bioreactor;
+use Excel;
 use Carbon\Carbon;
 
 use App\Http\Requests;
@@ -32,6 +33,46 @@ class BioreactorController extends Controller
 									 'dbdata'			=> $bioreactors
 									]);	
 	}
+
+
+	/**
+	 * Download all Bioreactors as Excel spreadsheet. Only available if the logged in user
+	 * is an admin
+	 *
+	 *
+	 */
+	public function excel() {	
+
+		// get all the bioreactors to show
+
+		//$bioreactors = Bioreactor::all();
+		//dd($bioreactors);
+
+		$bioreactors = Bioreactor::select('name', 'deviceid', 'city', 'country', 'last_datasync_at', 'created_at', 'updated_at')->get();
+
+		Excel::create('bioreactors', function($excel) use ($bioreactors) {
+
+			// Set the title
+			$excel->setTitle('Bioreactor List');
+
+			// Chain the setters
+			$excel->setCreator('Solar BioCells')
+					->setCompany('Solar BioCells');
+
+			// Call them separately
+			$excel->setDescription('List of Bioreactors');
+
+
+			$excel->sheet('User List', function ($sheet) use ($bioreactors) {
+				$sheet->row(1, array('Name','BioReactor ID', 'City', 'Country', 'Last Data Sync', 'Created On', 'Last Updated'));
+
+				$sheet->fromArray($bioreactors, null, 'A2', false, false);
+			});
+
+		})->export('xls');
+
+	}
+
 
 	/**
 	 * Show a single bioreactor record for editing

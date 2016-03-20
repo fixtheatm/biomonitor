@@ -29,7 +29,8 @@
 						<td><a href="/mylightreadings"><button type="button" class="btn btn-success btn-xs">3 Hours</button></a>
 						    <a href="/mylightreadings/24"><button type="button" class="btn btn-success btn-xs">24 Hours</button></a></td>
 						<td><a href="/mytemperatures"><button type="button" class="btn btn-success btn-xs">3 Hours</button></a>
-						    <a href="/mytemperatures/24"><button type="button" class="btn btn-success btn-xs">24 Hours</button></a></td>
+						    <a href="/mytemperatures/24"><button type="button" class="btn btn-success btn-xs">24 Hours</button></a>
+						</td>
 					</tr>
 				</tbody>
 

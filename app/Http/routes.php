@@ -78,6 +78,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/mygasflows',			'MygasflowsController@index' );
 
     Route::get('/users',				'UserController@index' );
+    Route::get('/users/excel',			'UserController@excel' );
     Route::get('/user/{id}',			'UserController@show' );
     Route::post('/user/{user}',			'UserController@update' );
     Route::get('/user',					'UserController@create' );
@@ -96,6 +97,7 @@ Route::group(['middleware' => 'web'], function () {
 
 	
     Route::get('/bioreactors',				'BioreactorController@index' );
+    Route::get('/bioreactors/excel',		'BioreactorController@excel' );
     Route::get('/bioreactor/{id}',			'BioreactorController@show' );
     Route::post('/bioreactor/{bioreactor}',	'BioreactorController@update' );
     Route::get('/bioreactor',				'BioreactorController@create' );
