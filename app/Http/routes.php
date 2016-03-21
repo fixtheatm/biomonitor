@@ -104,5 +104,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/bioreactor',				'BioreactorController@update' );
     Route::get('/bioreactor/delete/{id}',	'BioreactorController@delete' );
 
+    Route::post('/export',					'ExportController@export' );
 
 });

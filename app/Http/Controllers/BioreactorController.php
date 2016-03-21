@@ -48,7 +48,7 @@ class BioreactorController extends Controller
 		//$bioreactors = Bioreactor::all();
 		//dd($bioreactors);
 
-		$bioreactors = Bioreactor::select('name', 'deviceid', 'city', 'country', 'last_datasync_at', 'created_at', 'updated_at')->get();
+		$bioreactors = Bioreactor::select('name', 'deviceid', 'city', 'country', 'last_datasync_at', 'created_at', 'updated_at', 'latitude', 'longitude')->get();
 
 		Excel::create('bioreactors', function($excel) use ($bioreactors) {
 
@@ -63,8 +63,8 @@ class BioreactorController extends Controller
 			$excel->setDescription('List of Bioreactors');
 
 
-			$excel->sheet('User List', function ($sheet) use ($bioreactors) {
-				$sheet->row(1, array('Name','BioReactor ID', 'City', 'Country', 'Last Data Sync', 'Created On', 'Last Updated'));
+			$excel->sheet('Bioreactor List', function ($sheet) use ($bioreactors) {
+				$sheet->row(1, array('Name','BioReactor ID', 'City', 'Country', 'Last Data Sync', 'Created On', 'Last Updated', 'Latitude', 'Longitude'));
 
 				$sheet->fromArray($bioreactors, null, 'A2', false, false);
 			});

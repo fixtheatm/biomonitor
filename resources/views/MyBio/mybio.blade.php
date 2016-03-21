@@ -4,7 +4,7 @@
 
 <div class="panel panel-primary">
 
-	@include('common_detail_header', array('show_map' => true))
+	@include('common_detail_header', array('show_map' => true, 'show_excel' => true))
 
 	<div class="panel-body">
 
@@ -39,6 +39,62 @@
 	</div>
 </div> 
 
+  <div class="modal fade" id="raw_data_export_modal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Raw Data Export to Excel</h4>
+        </div>
+        <div class="modal-body">
+
+		{!! Form::open(array('url' => '/export')) !!}
+		
+		<div class="form-group">
+			<div class="table table-condensed table-responsive">          
+				<table class="table">
+					<tr class="info">
+						<td>
+			{!! Form::label('Gas Flow readings ') !!}
+			{!! Form::radio('datatype_to_excel', 1, true) !!}
+						</td>
+						<td>
+			{!! Form::label('Light readings ') !!}
+			{!! Form::radio('datatype_to_excel', 2, false) !!}
+						</td>
+						<td>
+			{!! Form::label('Temperature readings ') !!}
+			{!! Form::radio('datatype_to_excel', 3, false) !!}
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="table table-condensed table-responsive">          
+				<table class="table">
+					<tr class="info">
+						<td>
+			{!! Form::label('Start Date') !!}
+			{!! Form::date('start_date', \Carbon\Carbon::now()) !!}
+						</td>
+						<td>
+			{!! Form::label('End Date') !!}
+			{!! Form::date('end_date', \Carbon\Carbon::now()) !!}
+						</td>
+					</tr>
+				</table>
+			</div>
+
+		</div>
+
+        </div>
+        <div class="modal-footer">
+			{!! Form::submit('Go', array('class'=>'btn btn-success btn-sm')) !!}
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+		{!! Form::close() !!}
+      </div>
+    </div>
+  </div>
 
 
   <div class="modal fade" id="gasflow_modal" role="dialog">
