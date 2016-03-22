@@ -7,6 +7,7 @@ use Auth;
 use Hash;
 use App\Bioreactor;
 use Excel;
+use Lang;
 use Carbon\Carbon;
 
 use App\Http\Requests;
@@ -50,21 +51,42 @@ class BioreactorController extends Controller
 
 		$bioreactors = Bioreactor::select('name', 'deviceid', 'city', 'country', 'last_datasync_at', 'created_at', 'updated_at', 'latitude', 'longitude')->get();
 
-		Excel::create('bioreactors', function($excel) use ($bioreactors) {
+		$excel_filename = Lang::get('export.bioreactors_filename');
 
-			// Set the title
-			$excel->setTitle('Bioreactor List');
+		Excel::create($excel_filename, function($excel) use ($bioreactors) {
 
-			// Chain the setters
-			$excel->setCreator('Solar BioCells')
-					->setCompany('Solar BioCells');
+			$creator		= Lang::get('export.solar_biocells');
+			$company		= Lang::get('export.solar_biocells');
 
-			// Call them separately
-			$excel->setDescription('List of Bioreactors');
+			$title			= Lang::get('export.bioreactors_list');
 
+			$description	= Lang::get('export.bioreactors_description');
+			$sheet_name		= Lang::get('export.bioreactors_sheet_name');
 
-			$excel->sheet('Bioreactor List', function ($sheet) use ($bioreactors) {
-				$sheet->row(1, array('Name','BioReactor ID', 'City', 'Country', 'Last Data Sync', 'Created On', 'Last Updated', 'Latitude', 'Longitude'));
+			// Set the title, etc
+			$excel->setTitle($title)
+				  ->setCreator($creator)
+				  ->setCompany($company)
+				  ->setDescription($description);
+
+			$excel->sheet($sheet_name, function ($sheet) use ($bioreactors) {
+
+				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
+				$created_on_col_title		= Lang::get('export.created_on_col_title');
+				$last_updated_col_title		= Lang::get('export.last_updated_col_title');
+
+				$bioreactors_name_col_title		= Lang::get('export.bioreactors_name_col_title');
+				$bioreactors_city_col_title		= Lang::get('export.bioreactors_city_col_title');
+				$bioreactors_country_col_title	= Lang::get('export.bioreactors_country_col_title');
+				$bioreactors_last_datasync_col_title	= Lang::get('export.bioreactors_last_datasync_col_title');
+				$bioreactors_latitude_col_title	= Lang::get('export.bioreactors_latitude_col_title');
+				$bioreactors_longitude_col_title	= Lang::get('export.bioreactors_longitude_col_title');
+
+				$sheet->row(1, array($bioreactors_name_col_title,$bioreactor_id_col_title, 
+						$bioreactors_city_col_title, $bioreactors_country_col_title, 
+						$bioreactors_last_datasync_col_title,
+						$created_on_col_title, $last_updated_col_title, 
+						$bioreactors_latitude_col_title, $bioreactors_longitude_col_title));
 
 				$sheet->fromArray($bioreactors, null, 'A2', false, false);
 			});

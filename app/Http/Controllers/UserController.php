@@ -10,6 +10,7 @@ use App\Bioreactor;
 use Carbon\Carbon;
 use DB;
 use Excel;
+use Lang;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -51,21 +52,36 @@ class UserController extends Controller
 
 		$users = User::select('name', 'email', 'deviceid', 'isadmin', 'created_at', 'updated_at')->get();
 
-		Excel::create('users', function($excel) use ($users) {
+		$excel_filename = Lang::get('export.users_filename');
 
-			// Set the title
-			$excel->setTitle('User List');
+		Excel::create($excel_filename, function($excel) use ($users) {
 
-			// Chain the setters
-			$excel->setCreator('Solar BioCells')
-					->setCompany('Solar BioCells');
+			$creator		= Lang::get('export.solar_biocells');
+			$company		= Lang::get('export.solar_biocells');
 
-			// Call them separately
-			$excel->setDescription('List of users registered for Bioreactor login');
+			$title			= Lang::get('export.users_list');
 
+			$description	= Lang::get('export.users_description');
+			$sheet_name		= Lang::get('export.users_sheet_name');
 
-			$excel->sheet('User List', function ($sheet) use ($users) {
-				$sheet->row(1, array('Name', 'Email', 'BioReactor ID', 'Admin?','Created On', 'Last Updated'));
+			// Set the title, etc
+			$excel->setTitle($title)
+				  ->setCreator($creator)
+				  ->setCompany($company)
+				  ->setDescription($description);
+
+			$excel->sheet($sheet_name, function ($sheet) use ($users) {
+
+				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
+				$created_on_col_title		= Lang::get('export.created_on_col_title');
+				$last_updated_col_title		= Lang::get('export.last_updated_col_title');
+				$users_name_col_title		= Lang::get('export.users_name_col_title');
+				$users_email_col_title		= Lang::get('export.users_email_col_title');
+				$users_isadmin_col_title	= Lang::get('export.users_isadmin_col_title');
+
+				$sheet->row(1, array($users_name_col_title, $users_email_col_title, $bioreactor_id_col_title,
+								$users_isadmin_col_title,
+								$created_on_col_title, $last_updated_col_title));
 
 				$sheet->fromArray($users, null, 'A2', false, false);
 			});

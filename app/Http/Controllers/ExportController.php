@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Auth;
-use Hash;
+use DB;
 use App\Temperature;
 use App\Lightreading;
 use App\Gasflow;
 use App\Bioreactor;
 use Carbon\Carbon;
-use DB;
 use Excel;
+use Lang;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -19,36 +19,66 @@ use App\Http\Controllers\Controller;
 class ExportController extends Controller
 {
 
+	/**
+	 * Download GasFlows as Excel spreadsheet.
+	 * 
+	 *
+	 * @param Request $request - data from the form
+	 *
+	 */
 	public function exportGasFlows(Request $request) {	 
 	 
+		// Get the deviceid of the Bioreactor that the user has acess to
+
 		$deviceid = Auth::user()->deviceid;
 
 		//dd($deviceid);
 
-		$gasflows = Gasflow::select('deviceid', 'flow', 'recorded_on')
+		// get the records from the database
+		// based on the deviceid and the date range
+
+		$gasflows = Gasflow::select('deviceid', 'flow',
+							DB::raw("DATE(recorded_on) as date_recorded"), DB::raw("TIME(recorded_on) as time_recorded"))
 			->where('deviceid','=',$deviceid)
 			->where('recorded_on', '>=', $request->start_date)
 			->where('recorded_on', '<=', $request->end_date)
 			->get();
 
-		Excel::create('gasflows', function($excel) use ($gasflows,$request) {
+		// generate the spreadsheet and download it through the browser
 
-			// Set the title
-			$excel->setTitle('Gas Flow Data');
+		$excel_filename = Lang::get('export.temperatures_filename');
 
-			// Chain the setters
-			$excel->setCreator('Solar BioCells')
-					->setCompany('Solar BioCells');
+		Excel::create($excel_filename, function($excel) use ($gasflows,$request) {
 
-			// Call them separately
-			$excel->setDescription('Gas Flows for Bioreactor');
+			$creator		= Lang::get('export.solar_biocells');
+			$company		= Lang::get('export.solar_biocells');
 
+			$title			= Lang::get('export.gasflows_data');
 
-			$excel->sheet('Gas Flow Data', function ($sheet) use ($gasflows,$request) {
-				$sheet->row(1, array('Starting On',$request->start_date)); 
-				$sheet->row(2, array('Ending On',$request->end_date));
+			$description	= Lang::get('export.gasflows_description');
+			$sheet_name		= Lang::get('export.gasflows_sheet_name');
 
-				$sheet->row(4, array('BioReactor ID', 'Flow (x10)','Recorded On'));
+			// Set the title, etc
+			$excel->setTitle($title)
+				  ->setCreator($creator)
+				  ->setCompany($company)
+				  ->setDescription($description);
+
+			$excel->sheet($sheet_name, function ($sheet) use ($gasflows,$request) {
+
+				$starting_on	= Lang::get('export.starting_on');
+				$ending_on		= Lang::get('export.ending_on');
+
+				$date_recorded_col_title	= Lang::get('export.date_recorded_col_title');
+				$time_recorded_col_title	= Lang::get('export.time_recorded_col_title');
+				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
+				$flow_col_title				= Lang::get('export.flow_col_title');
+
+				$sheet->row(1, array($starting_on,$request->start_date)); 
+				$sheet->row(2, array($ending_on,$request->end_date));
+
+				$sheet->row(4, array($bioreactor_id_col_title, $flow_col_title,
+								$date_recorded_col_title, $time_recorded_col_title));
 
 				$sheet->fromArray($gasflows, null, 'A5', false, false);
 			});
@@ -57,36 +87,67 @@ class ExportController extends Controller
 	
 	}
 
+	/**
+	 * Download Temperatures as Excel spreadsheet.
+	 * 
+	 *
+	 * @param Request $request - data from the form
+	 *
+	 */
 	public function exportTemperatures(Request $request) {	
 	 
+		// Get the deviceid of the Bioreactor that the user has acess to
+
 		$deviceid = Auth::user()->deviceid;
 
 		//dd($deviceid);
 
-		$temperatures = Temperature::select('deviceid', 'temperature', 'recorded_on')
+		// get the records from the database
+		// based on the deviceid and the date range
+
+		$temperatures = Temperature::select('deviceid', 'temperature', 
+							DB::raw("DATE(recorded_on) as date_recorded"), DB::raw("TIME(recorded_on) as time_recorded"))
 			->where('deviceid','=',$deviceid)
 			->where('recorded_on', '>=', $request->start_date)
 			->where('recorded_on', '<=', $request->end_date)
 			->get();
 
-		Excel::create('temperatures', function($excel) use ($temperatures,$request) {
+		// generate the spreadsheet and download it through the browser
 
-			// Set the title
-			$excel->setTitle('Temperature Data');
+		$excel_filename = Lang::get('export.temperatures_filename');
 
-			// Chain the setters
-			$excel->setCreator('Solar BioCells')
-					->setCompany('Solar BioCells');
+		Excel::create($excel_filename, function($excel) use ($temperatures,$request) {
 
-			// Call them separately
-			$excel->setDescription('Temperatures for Bioreactor');
+			$creator		= Lang::get('export.solar_biocells');
+			$company		= Lang::get('export.solar_biocells');
+
+			$title			= Lang::get('export.temperature_data');
+
+			$description	= Lang::get('export.temperature_description');
+			$sheet_name		= Lang::get('export.temperature_sheet_name');
+
+			// Set the title, etc
+			$excel->setTitle($title)
+				  ->setCreator($creator)
+				  ->setCompany($company)
+				  ->setDescription($description);
+
+			$excel->sheet($sheet_name, function ($sheet) use ($temperatures,$request) {
+
+				$starting_on	= Lang::get('export.starting_on');
+				$ending_on		= Lang::get('export.ending_on');
+
+				$date_recorded_col_title	= Lang::get('export.date_recorded_col_title');
+				$time_recorded_col_title	= Lang::get('export.time_recorded_col_title');
+				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
+				$temperature_col_title		= Lang::get('export.temperature_col_title');
 
 
-			$excel->sheet('Temperature Data', function ($sheet) use ($temperatures,$request) {
-				$sheet->row(1, array('Starting On',$request->start_date)); 
-				$sheet->row(2, array('Ending On',$request->end_date));
+				$sheet->row(1, array($starting_on,$request->start_date)); 
+				$sheet->row(2, array($ending_on,$request->end_date));
 
-				$sheet->row(4, array('BioReactor ID', 'Temperature','Recorded On'));
+				$sheet->row(4, array($bioreactor_id_col_title, $temperature_col_title,
+								$date_recorded_col_title, $time_recorded_col_title));
 
 				$sheet->fromArray($temperatures, null, 'A5', false, false);
 			});
@@ -95,36 +156,67 @@ class ExportController extends Controller
 	
 	}
 
-	public function exportLightReadings(Request $request) {	 
+	/**
+	 * Download LightReadings as Excel spreadsheet.
+	 * 
+	 *
+	 * @param Request $request - data from the form
+	 *
+	 */
+	public function exportLightReadings(Request $request) 
+	{	 
+		// Get the deviceid of the Bioreactor that the user has acess to
 
 		$deviceid = Auth::user()->deviceid;
 
 		//dd($deviceid);
 
-		$lightreadings = Lightreading::select('deviceid', 'lux', 'recorded_on')
+		// get the records from the database
+		// based on the deviceid and the date range
+
+		$lightreadings = Lightreading::select('deviceid', 'lux',
+							DB::raw("DATE(recorded_on) as date_recorded"), DB::raw("TIME(recorded_on) as time_recorded"))
 			->where('deviceid','=',$deviceid)
 			->where('recorded_on', '>=', $request->start_date)
 			->where('recorded_on', '<=', $request->end_date)
 			->get();
 
-		Excel::create('lightreadings', function($excel) use ($lightreadings,$request) {
+		// generate the spreadsheet and download it through the browser
 
-			// Set the title
-			$excel->setTitle('Light Reading Data');
+		$excel_filename = Lang::get('export.lightreadings_filename');
 
-			// Chain the setters
-			$excel->setCreator('Solar BioCells')
-					->setCompany('Solar BioCells');
+		Excel::create($excel_filename, function($excel) use ($lightreadings,$request) {
 
-			// Call them separately
-			$excel->setDescription('Light Readings for Bioreactor');
+			$creator		= Lang::get('export.solar_biocells');
+			$company		= Lang::get('export.solar_biocells');
+
+			$title			= Lang::get('export.lightreadings_data');
+
+			$description	= Lang::get('export.lightreadings_description');
+			$sheet_name		= Lang::get('export.lightreadings_sheet_name');
+
+			// Set the title, etc
+			$excel->setTitle($title)
+				  ->setCreator($creator)
+				  ->setCompany($company)
+				  ->setDescription($description);
 
 
-			$excel->sheet('Light Reading Data', function ($sheet) use ($lightreadings,$request) {
-				$sheet->row(1, array('Starting On',$request->start_date)); 
-				$sheet->row(2, array('Ending On',$request->end_date));
+			$excel->sheet($sheet_name, function ($sheet) use ($lightreadings,$request) {
 
-				$sheet->row(4, array('BioReactor ID', 'Lux','Recorded On'));
+				$starting_on	= Lang::get('export.starting_on');
+				$ending_on		= Lang::get('export.ending_on');
+
+				$date_recorded_col_title	= Lang::get('export.date_recorded_col_title');
+				$time_recorded_col_title	= Lang::get('export.time_recorded_col_title');
+				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
+				$lux_col_title				= Lang::get('export.lux_col_title');
+
+				$sheet->row(1, array($starting_on,$request->start_date)); 
+				$sheet->row(2, array($ending_on,$request->end_date));
+
+				$sheet->row(4, array($bioreactor_id_col_title, 'Lux',
+								$date_recorded_col_title,$time_recorded_col_title));
 
 				$sheet->fromArray($lightreadings, null, 'A5', false, false);
 			});
@@ -135,14 +227,17 @@ class ExportController extends Controller
 	}
 
 	/**
-	 * Download all users as Excel spreadsheet. Only available if the logged in user
-	 * is an admin
+	 * Download data as Excel spreadsheet.
+	 * User will have selected which datatype and a date range 
+	 * on the form. This handles the Form post.
 	 *
-	 *
+	 * @param Request $request - data from the form
 	 */
 	public function export(Request $request) {	
 
 		//dd($request);
+
+		// select which datatype to export
 
 		switch($request->datatype_to_excel)	{
 			case '1':

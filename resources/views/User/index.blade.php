@@ -4,7 +4,7 @@
 
 <div class="panel panel-default" style="border-color:blue">
 	<div class="panel-body">
-		<div style="margin-left:8px;margin-bottom:5px">
+		<div class="tab-content" style="margin-left:0.5em;margin-bottom:0.5em">
 			<a href="/user"><button type="button" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-plus"></span></button></a>
 			&nbsp;&nbsp;
 			<a href="/users/excel"><button type="button" class="btn btn-success btn-sm">Excel&nbsp;<span class="glyphicon glyphicon-download-alt"></span></button></a>
@@ -41,7 +41,7 @@
 				@endforeach
 				</tbody>
 			</table>
-
+			</div>
 
 		</div>
 	</div>
