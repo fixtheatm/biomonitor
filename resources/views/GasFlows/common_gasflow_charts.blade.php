@@ -29,6 +29,8 @@
     Chart.defaults.global.responsive = true;
     Chart.defaults.global.scaleLineColor = "black";
     Chart.defaults.global.scaleFontSize = 12;
+    Chart.defaults.global.scaleBeginAtZero= true;
+
 
     var ctx = document.getElementById("gasflow_canvas").getContext("2d");
 

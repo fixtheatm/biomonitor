@@ -58,6 +58,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
   <script type="text/javascript">
+  
 
 	var temp_lineChartData = {
 		labels: [@foreach ($x_temperature_data as $pt)"{{ $pt }}",@endforeach],
@@ -73,11 +74,13 @@
 	Chart.defaults.global.tooltipYPadding = 16;
 	Chart.defaults.global.tooltipCornerRadius = 0;
 	Chart.defaults.global.tooltipTitleFontStyle = "normal";
+
 	Chart.defaults.global.tooltipFillColor = "rgba(0,160,0,0.8)";
 	Chart.defaults.global.animationEasing = "easeOutBounce";
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.scaleLineColor = "black";
 	Chart.defaults.global.scaleFontSize = 12;
+	Chart.defaults.global.scaleBeginAtZero= true;	
 
 	var ctx = document.getElementById("temp_canvas").getContext("2d");
 
