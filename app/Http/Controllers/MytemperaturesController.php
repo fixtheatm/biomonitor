@@ -47,6 +47,10 @@ class MytemperaturesController extends Controller
 		// returns recorded_on date of last (most recent) record
 
 		$end_datetime = $this->getTemperatureData($id, $hrs);
+		if (is_null($this->temperatures))
+		{
+		 $this->temperatures = array();
+		}
 
 		// put the data in the correct form for the charts JS library
 		// generate an x and y array
@@ -59,7 +63,6 @@ class MytemperaturesController extends Controller
 		// pass data it to the view
 
 	    return view('Temperatures.mytemperatures', ['route' => 'mytemperatures',
-	                                'header_title'	=> 'My BioRector Temperatures ',
 		                             'id'				=> $id,
 									 'bioreactor'		=> $bioreactor,
 									 'end_datetime'     => $end_datetime->toDateTimeString(),

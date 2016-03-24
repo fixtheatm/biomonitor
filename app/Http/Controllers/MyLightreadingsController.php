@@ -47,6 +47,10 @@ class MylightreadingsController extends Controller
 		// returns recorded_on date of last (most recent) record
 
 		$end_datetime = $this->getLightreadingData($id, $hrs);
+		if (is_null($this->lightreadings))
+		{
+		 $this->lightreadings = array();
+		}
 
 		// put the data in the correct form for the charts JS library
 		// generate an x and y array
@@ -59,7 +63,6 @@ class MylightreadingsController extends Controller
 		// pass data it to the view
 
 	    return view('LightReadings.mylightreadings', ['route' => 'mylightreadings',
-	                                'header_title'	=> 'My BioRector Light Readings ',
 		                             'id'				=> $id,
 									 'bioreactor'		=> $bioreactor,
 									 'end_datetime'     => $end_datetime->toDateTimeString(),

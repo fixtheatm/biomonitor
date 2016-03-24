@@ -73,7 +73,6 @@ class MybioController extends Controller
 
 	    return view('MyBio.mybio', ['route' => 'mybio',
 		                             'id'				=> $id,
-	                                 'header_title'	=> 'My BioReactor Status',
 									 'bioreactor'		=> $bioreactor,
 									 'x_temperature_data'	=> $temp_axis_data['x_data'],
 									 'y_temperature_data'	=> $temp_axis_data['y_data'],

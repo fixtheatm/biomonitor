@@ -17,6 +17,32 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
+    /**
+     * Create a new controller instance.
+	 *  Register with the Auth so users must be logged in to access
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+	/**
+	 * Get the record of the logged in user
+	 * and make sure they are an admin. Die if they are not
+	 *
+	 *
+	 */
+	protected function checkIfIsAnAdmin() {
+		
+		if ( !Auth::user()->isadmin )
+		{
+			$message = Lang::get('export.you_are_not_an_admin');
+			dd($message);
+		}
+	}
+
 	/**
 	 * Show all users. Only available if the logged in user
 	 * is an admin
@@ -25,15 +51,18 @@ class UserController extends Controller
 	 */
 	public function index() {	
 
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
+
 		// get all the users to show
 
 		$users = User::all();
 
 		//dd($users->toJson());
 
-	    return view('User.index', ['route'			=> 'users',
-		                             'header_title'		=> 'All Users',
-									 'dbdata'			=> $users
+	    return view('User.index', [	'route'				=> 'users',
+									'header_title'		=> Lang::get('export.all_users'),
+									'dbdata'			=> $users
 									]);	
 	}
 
@@ -44,6 +73,9 @@ class UserController extends Controller
 	 *
 	 */
 	public function excel() {	
+
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
 
 		// get all the users to show
 
@@ -99,12 +131,15 @@ class UserController extends Controller
 	public function show($id)
     {
 
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
+
 		// load the record from the table
 		try {
 			$user = User::where('id', '=', $id)->firstOrFail();
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! Invalid id';
+			$message = Lang::get('export.invalid_user_id');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -113,7 +148,7 @@ class UserController extends Controller
 		$bioreactors = Bioreactor::select('deviceid', DB::raw("coalesce(deviceid,'')||' '||coalesce(name,'') as wholename"))->orderBy('wholename')->lists('wholename', 'deviceid');
 
 	    return view('User.user', [	'route'				=> 'user',
- 									'header_title'		=> 'Edit User',
+ 									'header_title'		=> Lang::get('export.edit_user'),
 									'user'				=> $user,
 									'bioreactors'		=> $bioreactors
 								]);	
@@ -128,12 +163,20 @@ class UserController extends Controller
 	public function delete($id)
     {
 
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
+
+		// make sure the user does not try to delete themselves
+		if ($id == Auth::user()->id) {
+			dd(Lang::get('export.cannot_delete_yourself'));
+		}
+
 		// load the record from the table
 		try {
 			$user = User::where('id', '=', $id)->firstOrFail();
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! Invalid id';
+			$message = Lang::get('export.invalid_user_id');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -155,15 +198,8 @@ class UserController extends Controller
 	 */
 	public function create()
     {
-		// get the record of the logged in user
-		// and make sure they are an admin
-
-		if ( !Auth::user()->isadmin)
-		{
-			$message = 'Sorry! You are NOT an admin and cannot add users';
-			dd($message);
-		}
-
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
 
 		$user = new User();
 
@@ -173,7 +209,7 @@ class UserController extends Controller
 		$bioreactors = Bioreactor::select('deviceid', DB::raw("coalesce(deviceid,'')||' '||coalesce(name,'') as wholename"))->orderBy('wholename')->lists('wholename', 'deviceid');
 
 	    return view('User.user', [	'route'				=> 'user',
- 									'header_title'		=> 'Add User',
+ 									'header_title'		=> Lang::get('export.add_user'),
 									'user'				=> $user,
 									'bioreactors'		=> $bioreactors
 								]);	
@@ -187,6 +223,9 @@ class UserController extends Controller
 	 */
     public function update(Request $request)
     {
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
+
 		// the id will be non-empty for editing an existing user.
 		//
 		if ( $request->id !="")	{
@@ -196,7 +235,7 @@ class UserController extends Controller
 				$user = User::where('id', '=', $request->id)->firstOrFail();
 			}
 			catch (\Exception $e) {
-				$message = 'Sorry! Invalid id';
+				$message = Lang::get('export.invalid_user_id');
 				dd($message);
 				//return Redirect::to('error')->with('message', $message);
 			}

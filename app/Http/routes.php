@@ -1,16 +1,5 @@
 <?php
 
-use App\User;
-//use App\Bioreactor;
-//use App\Temperature;
-//use App\Lightreading;
-//use App\Gasflow;
-
-//use Illuminate\Http\Request;
-
-//use Auth;
-
-
 /*
 |--------------------------------------------------------------------------
 | Routes File
@@ -35,21 +24,6 @@ Route::get('/addusers',			'TestDataController@addusers');
 
 Route::get('/api',				'ApiController@api');
 
-/**
-* Under development
-*
-*/
-function userIsAdmin()
-{
-	// get the record of the logged in user
-	// and make sure they are an admin
-
-	//if ( !Auth::user()->isadmin )
-	{
-		$message = 'Sorry! You are NOT an admin and cannot perform this function';
-		dd($message);
-	}
-}
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +51,15 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('/mygasflows/{hrs}',		'MygasflowsController@index' );
     Route::get('/mygasflows',			'MygasflowsController@index' );
 
+    Route::get('/password',				'PasswordController@show' );
+    Route::post('/password',			'PasswordController@update' );
+
+	Route::get('/about',				'PagesController@about' );
+    Route::post('/export',				'ExportController@export' );
+
+
+	// All the routes below this point are only for admins
+	
     Route::get('/users',				'UserController@index' );
     Route::get('/users/excel',			'UserController@excel' );
     Route::get('/user/{id}',			'UserController@show' );
@@ -85,17 +68,6 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/user',				'UserController@update' );
     Route::get('/user/delete/{id}',		'UserController@delete' );
 
-    Route::get('/password',				'PasswordController@show' );
-    Route::post('/password',			'PasswordController@update' );
-
-
-	Route::get('/about',				'PagesController@about' );
-
-
-	// All the routes below this point are only for admins
-	//userIsAdmin();
-
-	
     Route::get('/bioreactors',				'BioreactorController@index' );
     Route::get('/bioreactors/excel',		'BioreactorController@excel' );
     Route::get('/bioreactor/{id}',			'BioreactorController@show' );
@@ -104,6 +76,5 @@ Route::group(['middleware' => 'web'], function () {
     Route::post('/bioreactor',				'BioreactorController@update' );
     Route::get('/bioreactor/delete/{id}',	'BioreactorController@delete' );
 
-    Route::post('/export',					'ExportController@export' );
 
 });

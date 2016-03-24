@@ -21,6 +21,34 @@ return [
     'created_on_col_title'		=> 'Created On',
     'last_updated_col_title'	=> 'Last Updated',
 
+    'you_are_not_an_admin'	=> 'Sorry! You are NOT an admin and cannot perform this function',
+    'cannot_delete_yourself'	=> 'Sorry! You cannot delete yourself. Bad idea and existentially wrong',
+
+	// BioReactor Controller strings 
+
+    'all_bioreactors'			=> 'All Bioreactors',
+    'add_bioreactor'			=> 'Add Bioreactor',
+    'edit_bioreactor'			=> 'Edit Bioreactor',
+    'invalid_bioreactor_id'		=> 'Sorry! Invalid bioreactor id',
+    'cannot_add_bioreactors'	=> 'Sorry! You are NOT an admin and cannot add bioreactors',
+
+	// User Controller strings 
+
+    'all_users'			=> 'All Users',
+    'add_user'			=> 'Add User',
+    'edit_user'			=> 'Edit User',
+    'invalid_user_id'	=> 'Sorry! Invalid user id',
+    'cannot_add_users'	=> 'Sorry! You are NOT an admin and cannot add users',
+
+	// Controller strings
+
+    'invalid_deviceid'				=> 'Sorry! Invalid deviceid',
+    'no_temperature_data_found'		=> 'Sorry! No temperature data was found',
+    'no_lightreading_data_found'	=> 'Sorry! No light reading data was found',
+    'no_gasflow_data_found'			=> 'Sorry! No gas flow data was found',
+
+
+
 	// temperature data export
 
     'temperatures_filename'		=> 'temperatures',

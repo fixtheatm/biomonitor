@@ -43,10 +43,14 @@ class MygasflowsController extends Controller
 		$bioreactor = $this->getBioreactorFromId($id);
 		//dd($bioreactor);
 
-		// load the temperature data for this site
+		// load the gas flow data for this site
 		// returns recorded_on date of last (most recent) record
 
 		$end_datetime = $this->getGasflowData($id, $hrs);
+		if (is_null($this->gasflows))
+		{
+		 $this->gasflows = array();
+		}
 
 		// put the data in the correct form for the charts JS library
 		// generate an x and y array
@@ -59,7 +63,6 @@ class MygasflowsController extends Controller
 		// pass data it to the view
 
 	    return view('GasFlows.mygasflows', ['route' => 'mygasflows',
-	                                'header_title'	=> 'My BioRector Gas Flows ',
 		                             'id'				=> $id,
 									 'bioreactor'		=> $bioreactor,
 									 'end_datetime'     => $end_datetime->toDateTimeString(),

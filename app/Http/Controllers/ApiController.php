@@ -17,6 +17,17 @@ use Carbon\Carbon;
 
 class ApiController extends Controller
 {
+    /**
+     * Create a new controller instance.
+	 *  Register with the Auth so users must be logged in to access
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
 
 	/**
 	*  Process request for a data dump of json results back
@@ -28,6 +39,8 @@ class ApiController extends Controller
 	*/
 	public function api(Request $request) {
 	
+	dd('In development');
+
 		$temp_data = array( [
 			'deviceid'	=> '34234', 
 			'temp'		=>	'21.012', 

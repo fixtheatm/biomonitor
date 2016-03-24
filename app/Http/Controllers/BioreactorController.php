@@ -15,6 +15,22 @@ use App\Http\Controllers\Controller;
 
 class BioreactorController extends Controller
 {
+
+	/**
+	 * Get the record of the logged in user
+	 * and make sure they are an admin. Die if they are not
+	 *
+	 *
+	 */
+	protected function checkIfIsAnAdmin() {
+		
+		if ( !Auth::user()->isadmin )
+		{
+			$message = Lang::get('export.you_are_not_an_admin');
+			dd($message);
+		}
+	}
+
 	/**
 	 * Show all bioreactors. Only available if the logged in user
 	 * is an admin
@@ -23,14 +39,17 @@ class BioreactorController extends Controller
 	 */
 	public function index() {	
 
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
+
 		// get all the bioreactors to show
 
 		$bioreactors = Bioreactor::all();
 
 		//dd($bioreactors->toJson());
 
-	    return view('Bioreactor.index', ['route'			=> 'bioreactors',
-		                             'header_title'		=> 'All Bioreactors',
+	    return view('Bioreactor.index', ['route'		=> 'bioreactors',
+		                             'header_title'		=> Lang::get('export.all_bioreactors'),
 									 'dbdata'			=> $bioreactors
 									]);	
 	}
@@ -43,6 +62,9 @@ class BioreactorController extends Controller
 	 *
 	 */
 	public function excel() {	
+
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
 
 		// get all the bioreactors to show
 
@@ -104,20 +126,22 @@ class BioreactorController extends Controller
 	 */
 	public function show($id)
     {
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
 
 		// load the record from the table
 		try {
 			$bioreactor = Bioreactor::where('id', '=', $id)->firstOrFail();
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! Invalid id';
+			$message = Lang::get('export.invalid_bioreactor_id');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
 		//dd($bioreactor);
 
-	    return view('Bioreactor.bioreactor', [	'route'				=> 'bioreactor',
- 									'header_title'		=> 'Edit Bioreactor',
+	    return view('Bioreactor.bioreactor', [	'route'			=> 'bioreactor',
+ 									'header_title'				=> Lang::get('export.edit_bioreactor'),
 									'bioreactor'				=> $bioreactor
 								]);	
     }
@@ -130,13 +154,15 @@ class BioreactorController extends Controller
 	 */
 	public function delete($id)
     {
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
 
 		// load the record from the table
 		try {
 			$bioreactor = Bioreactor::where('id', '=', $id)->firstOrFail();
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! Invalid id';
+			$message = Lang::get('export.invalid_bioreactor_id');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -158,15 +184,8 @@ class BioreactorController extends Controller
 	 */
 	public function create()
     {
-		// get the record of the logged in bioreactor
-		// and make sure they are an admin
-
-		if ( !Auth::user()->isadmin)
-		{
-			$message = 'Sorry! You are NOT an admin and cannot add bioreactors';
-			dd($message);
-		}
-
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
 
 		$bioreactor = new Bioreactor();
 
@@ -174,9 +193,9 @@ class BioreactorController extends Controller
 		// Admin user can change this on the screen.
 		$bioreactor->deviceid = $bioreactor->getNextDeviceID();
 
-	    return view('Bioreactor.bioreactor', [	'route'				=> 'bioreactor',
- 									'header_title'		=> 'Add Bioreactor',
-									'bioreactor'				=> $bioreactor
+	    return view('Bioreactor.bioreactor', [	'route'		=> 'bioreactor',
+ 									'header_title'			=> Lang::get('export.add_bioreactor'),
+									'bioreactor'			=> $bioreactor
 								]);	
     }
 
@@ -188,6 +207,9 @@ class BioreactorController extends Controller
 	 */
     public function update(Request $request)
     {
+		// die of this is not an admin
+		$this->checkIfIsAnAdmin();
+
 		// the id will be non-empty for editing an existing bioreactor.
 		//
 		if ( $request->id !="")	{
@@ -197,7 +219,7 @@ class BioreactorController extends Controller
 				$bioreactor = Bioreactor::where('id', '=', $request->id)->firstOrFail();
 			}
 			catch (\Exception $e) {
-				$message = 'Sorry! Invalid id';
+				$message = Lang::get('export.invalid_bioreactor_id');
 				dd($message);
 				//return Redirect::to('error')->with('message', $message);
 			}

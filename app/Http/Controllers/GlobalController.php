@@ -57,8 +57,7 @@ class GlobalController extends Controller
 		//dd($bioreactors->toJson());
 
 	    return view('Global.index', ['route'			=> 'global',
-		                             'header_title'		=> 'Global BioReactor Status',
-									 'dbdata'			=> $bioreactors
+		                             'dbdata'			=> $bioreactors
 									]);	
 	}
 
@@ -113,7 +112,6 @@ class GlobalController extends Controller
 
 	    return view('Global.show', [ 'route'			=> 'single',
 		                             'id'				=> $id,
-	                                 'header_title'		=> 'Single BioReactor Status',
 									 'bioreactor'		=> $bioreactor,
  									 'end_datetime'     => $end_datetime->toDateTimeString(),
 									 'x_temperature_data'	=> $temp_axis_data['x_data'],

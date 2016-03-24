@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App;
+use Lang;
 
 use App\Bioreactor;
 use App\Temperature;
@@ -62,7 +63,7 @@ class Controller extends BaseController
 			$this->bioreactor = Bioreactor::where('deviceid', '=', $id)->firstOrFail();
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! Invalid deviceid';
+			$message = Lang::get('export.invalid_deviceid');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -202,7 +203,7 @@ class Controller extends BaseController
 			}
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! No temperature data was found';
+			$message = Lang::get('export.no_temperature_data_found');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -237,7 +238,7 @@ class Controller extends BaseController
 		// if the temperatures have not been loaded
 		// indicates that gettemperature data has not been called
 		// or failed (no recs)
-		if ( ! is_null ($this->temperatures)) {
+		if ( ! is_null ($this->temperatures) && count($this->temperatures)>0) {
 
 			// reverse the order to make the graph more human like
 			$rev_temps = $this->temperatures->reverse();
@@ -401,7 +402,7 @@ class Controller extends BaseController
 			}
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! No lightreading data was found';
+			$message = Lang::get('export.no_lightreading_data_found');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -435,7 +436,7 @@ class Controller extends BaseController
 
 		// abort if the lightreadings have not been loaded
 		// indicates that getlightreading data has not been called
-		if ( ! is_null ($this->lightreadings)) {
+		if ( ! is_null ($this->lightreadings) && count($this->lightreadings)>0) {
 
 			// reverse the order to make the graph more human like
 			$rev_light = $this->lightreadings->reverse();
@@ -598,7 +599,7 @@ class Controller extends BaseController
 			}
 		}
 		catch (\Exception $e) {
-			$message = 'Sorry! No gasflow data was found';
+			$message = Lang::get('export.no_gasflow_data_found');
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
@@ -631,7 +632,7 @@ class Controller extends BaseController
 
 		// abort if the gasflows have not been loaded
 		// indicates that getgasflow data has not been called
-		if ( ! is_null ($this->gasflows)) {
+		if ( ! is_null ($this->gasflows) && count($this->gasflows)>0) {
 
 			// reverse the order to make the graph more human like
 			$rev_gasflow = $this->gasflows->reverse();

@@ -18,6 +18,16 @@ use App\Http\Controllers\Controller;
 
 class ExportController extends Controller
 {
+    /**
+     * Create a new controller instance.
+	 *  Register with the Auth so users must be logged in to access
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
 	/**
 	 * Download GasFlows as Excel spreadsheet.
@@ -27,7 +37,7 @@ class ExportController extends Controller
 	 *
 	 */
 	public function exportGasFlows(Request $request) {	 
-	 
+
 		// Get the deviceid of the Bioreactor that the user has acess to
 
 		$deviceid = Auth::user()->deviceid;

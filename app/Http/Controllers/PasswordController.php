@@ -13,6 +13,18 @@ use App\Http\Controllers\Controller;
 
 class PasswordController extends Controller
 {
+    /**
+     * Create a new controller instance.
+	 *  Register with the Auth so users must be logged in to access
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+
 	/**
 	 * Show the current logged in user record for editing
 	 * They can only set the password
@@ -26,7 +38,6 @@ class PasswordController extends Controller
 		//dd($user);
 
 	    return view('Password.password', [	'route'				=> 'password',
- 									'header_title'		=> 'Change Password',
 									'user'				=> $user
 								]);	
 	
