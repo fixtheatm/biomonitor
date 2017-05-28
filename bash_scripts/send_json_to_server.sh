@@ -12,16 +12,16 @@
 #
 
 # see which platform we are on. Windows is for testing.
-# Linux is raspberry pi production. 
+# Linux is raspberry pi production.
 OS=$OSTYPE
 Linux=false
-if [[ ${OS:0:5} = "Linux" ]] 
+if [[ ${OS:0:5} = "Linux" ]]
 then
 	Linux=true
 fi
 
 # name of the server we are posting to.
-# 
+#
 SERVER="laravel.dev"
 
 # root folder where are json files are being stored
@@ -36,7 +36,7 @@ fi
 # the wildcard string denoting our json files
 JSON_WILDCARD="bio_*.json"
 
-# the folder where we are moving the json files that have been 
+# the folder where we are moving the json files that have been
 # successfully posted to the server
 # for Windows we are using "./sent/" On the raspberry pi we are using "/usr/local/bin/bioreactor/sent/"
 # It needs to end in a forward slash
@@ -107,4 +107,3 @@ do
 	sendJsonToServer $f
 done
 exit 0
-
