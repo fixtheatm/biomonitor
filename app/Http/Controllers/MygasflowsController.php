@@ -23,17 +23,17 @@ class MygasflowsController extends Controller
         $this->middleware('auth');
     }
 
-	/*
+	/**
 	 * Show the users gas production flows
 	 *
 	 * @param int $hrs default 3. number of hours of data to view. (only 3 or 24 right now)
 	 *
 	 */
-	public function index($hrs=3) {	
+	public function index($hrs=3) {
 
 	    //dd($hrs);
 
-		// the deviceid should not be blank or bogus as 
+		// the deviceid should not be blank or bogus as
 		// it is from the user record enforced with a foreign key constraint
 
 		$id = Auth::user()->deviceid;
@@ -69,7 +69,7 @@ class MygasflowsController extends Controller
 									 'x_gasflow_data'	=> $gasflow_axis_data['x_data'],
 									 'y_gasflow_data'	=> $gasflow_axis_data['y_data'],
 									 'dbdata'			=> $this->gasflows
-									]);	
+									]);
 
     }
 

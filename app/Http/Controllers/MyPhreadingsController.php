@@ -13,20 +13,20 @@ use Carbon\Carbon;
 
 class MyphreadingsController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+  /**
+   * Create a new controller instance.
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
 
-  /*
+  /**
    * Show the users ph readings
    *
-   * @param $hrs the number of hours of data to display
+   * @param int $hrs default 3. number of hours of data to view. (only 3 or 24 right now)
    */
   public function index($hrs=3) {
 
