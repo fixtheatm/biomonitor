@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Bioreactor;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Bioreactor;
+use Lang;
 
 class MybioController extends Controller
 {
@@ -23,9 +24,6 @@ class MybioController extends Controller
 
   /**
    * Show the users bioreactor summary view
-   *
-   *
-   *
    */
   public function index() {
 
@@ -33,69 +31,78 @@ class MybioController extends Controller
     // it is from the user record enforced with a foreign key constraint
 
     $id = Auth::user()->deviceid;
-    //dd($id);
+    // TODO refactor: same block of code as GlobalController@show
+    $bioreactor = $this->getBioreactorFromId( $id );
 
-    $bioreactor = $this->getBioreactorFromId($id);
-    //dd($bioreactor);
+    // For each sensor, get the associated data from the database for this
+    // location.  Convert the data to the format needed by the Chart.js library.
+    // x holds time labels (hh:mm), y holds the data
 
     // Load and prep all the temperature data
-    $this->getTemperatureData($id);
+    $end_datetime = $this->getTemperatureData( $id );
+    $temp_axis_data = $this->_buildXYTemperatureData(); // Degrees Celsius
 
-    // build the x and y datapoints
+    $this->getLightreadingData( $id );
+    $light_axis_data = $this->_buildXYLightreadingData(); // lux as nnnnn.n
 
-    $temp_axis_data = $this->_buildXYTemperatureData();
-    //dd($axis_data);
+    $this->getGasflowData( $id );
+    $gasflow_axis_data = $this->_buildXYGasflowData(); // milliliters/minute
 
-    // load and prep all the lightreadings data
-    $lightreadings = $this->getLightreadingData($id);
+    $this->getPhreadingData( $id );
+    $ph_axis_data = $this->_buildXYPhreadingData(); // pH
 
-    // put the data in the correct form for the charts JS library
-    // generate an x and y array
-    // x holds labels as mm:ss format
-    // y holds lux as nnnnn.n format
-
-    $light_axis_data = $this->_buildXYLightreadingData();
-    //dd($light_axis_data);
-
-    // load and prep all the gasflows data
-    $gasflows = $this->getGasflowData($id);
-
-    // put the data in the correct form for the charts JS library
-    // generate an x and y array
-    // x holds labels as mm:ss format
-    // y holds lux as nn.nnn format
-
-    $gasflow_axis_data = $this->_buildXYGasflowData();
-    //dd($gasflow_axis_data);
-
-    // load and prep all the phreadings data
-    $phreadings = $this->getPhreadingData($id);
-
-    // put the data in the correct form for the charts JS library
-    // generate an x and y array
-    // x holds labels as mm:ss format
-    // y holds lux as nnnnn.n format
-
-    $ph_axis_data = $this->_buildXYPhreadingData();
-    //dd($ph_axis_data);
-
+    $view_end_time = $end_datetime->toDateTimeString(); // locale specific?
+    $sensor_ref = [
+      'gasflow'         => [
+        'name' => 'gasflow',
+        'graph' => 'gasflow',
+        'title' => Lang::get('bioreactor.gasflow_title' ),
+        'end_datetime' => $view_end_time,
+        'x_data'    => $gasflow_axis_data['x_data'],
+        'y_data'    => $gasflow_axis_data['y_data'],
+      ],
+      'light'           => [
+        'name' => 'light',
+        'graph' => 'lightreading',
+        'title' => Lang::get('bioreactor.light_title' ),
+        'end_datetime' => $view_end_time,
+        'x_data'    => $light_axis_data['x_data'],
+        'y_data'    => $light_axis_data['y_data'],
+      ],
+      'temperature'     => [
+        'name' => 'temp',
+        'graph' => 'temperature',
+        'title' => Lang::get('bioreactor.temperature_title' ),
+        'end_datetime' => $view_end_time,
+        'x_data'    => $temp_axis_data['x_data'],
+        'y_data'    => $temp_axis_data['y_data'],
+      ],
+      'ph'              => [
+        'name' => 'ph',
+        'graph' => 'phreading',
+        'title' => Lang::get('bioreactor.ph_title' ),
+        'end_datetime' => $view_end_time,
+        'x_data'    => $ph_axis_data['x_data'],
+        'y_data'    => $ph_axis_data['y_data'],
+      ],
+    ];
 
     // pass data into the view
-
-      return view('MyBio.mybio', [
-        'route' => 'mybio',
-        'id'        => $id,
-        'bioreactor'    => $bioreactor,
-        'x_temperature_data'  => $temp_axis_data['x_data'],
-        'y_temperature_data'  => $temp_axis_data['y_data'],
-        'x_lightreading_data'  => $light_axis_data['x_data'],
-        'y_lightreading_data'  => $light_axis_data['y_data'],
-        'x_gasflow_data'  => $gasflow_axis_data['x_data'],
-        'y_gasflow_data'  => $gasflow_axis_data['y_data'],
-        'x_phreading_data'  => $ph_axis_data['x_data'],
-        'y_phreading_data'  => $ph_axis_data['y_data'],
-
-      ]);
-
+    return view('MyBio.mybio', [
+      'route'               => 'mybio',
+      'header_title'        => 'My BioReactor',
+      'id'                  => $id,
+      'bioreactor'          => $bioreactor,
+      'sensors'             => $sensor_ref,
+      'end_datetime'        => $view_end_time,
+      'x_temperature_data'  => $temp_axis_data['x_data'],
+      'y_temperature_data'  => $temp_axis_data['y_data'],
+      'x_lightreading_data' => $light_axis_data['x_data'],
+      'y_lightreading_data' => $light_axis_data['y_data'],
+      'x_gasflow_data'      => $gasflow_axis_data['x_data'],
+      'y_gasflow_data'      => $gasflow_axis_data['y_data'],
+      'x_phreading_data'    => $ph_axis_data['x_data'],
+      'y_phreading_data'    => $ph_axis_data['y_data'],
+    ]);
   }
 }

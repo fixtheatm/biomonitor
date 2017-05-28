@@ -117,13 +117,13 @@
       xAxes: [{
         scaleLabel: {
           display: true,
-          labelString: "HH:MM ending at: {{ $end_datetime }}",
+          labelString: "Time (HH:MM) ending at: {{ $end_datetime }}",
           fontSize: 14,
         },
       }]
     },
     title: {
-      text: "BioReactor Temperature versus Time",
+      text: "Photo BioReactor Temperature versus Time",
     },
   };
 

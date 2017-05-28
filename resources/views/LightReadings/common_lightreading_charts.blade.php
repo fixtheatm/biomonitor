@@ -1,58 +1,64 @@
-  <script type="text/javascript">
+<script>
+// common line chart options for light graphs
+/*global $ */
+/*jslint browser */
 
-    var small_light_lineChartData = {
-    labels: [@foreach ($x_lightreading_data as $pt)".",@endforeach],
-    datasets: [{
-    fillColor: "rgba(220,220,220,0)",
-    strokeColor: "rgba(220,180,0,1)",
-    pointColor: "rgba(220,180,0,1)",
-    data: [@foreach ($y_lightreading_data as $pt)"{{ $pt }}",@endforeach]
-    }]
+var baseGraphOptions = {
+    scales: {
+        yAxes: [{
+            scaleLabel: {
+                display: true,
+                labelString: "lux",
+                fontSize: 14
+            }
+        }],
+        xAxes: [{
+            scaleLabel: {
+                display: true,
+                labelString: "Time (HH:MM) ending at: {{ $end_datetime }}",
+                fontSize: 14
+            }
+        }]
     }
+};
 
-    var big_light_lineChartData = {
-    labels: [@foreach ($x_lightreading_data as $pt)"{{ $pt }}",@endforeach],
-    datasets: [{
-    fillColor: "rgba(220,220,220,0)",
-    strokeColor: "rgba(220,180,0,1)",
-    pointColor: "rgba(220,180,0,1)",
-    data: [@foreach ($y_lightreading_data as $pt)"{{ $pt }}",@endforeach]
-    }]
+var small_lightOptions = $.extend(true, {}, baseGraphOptions, {
+    scales: {
+        yAxes: [{
+            ticks: {
+              suggestedMin: 0,
+            },
+            scaleLabel: {
+                fontSize: 12
+            }
+        }],
+        xAxes: [{
+            scaleLabel: {
+                display: false
+            }
+        }]
+    },
+    title: {
+        display: false,
     }
+});
+var big_lightOptions = $.extend(true, {}, baseGraphOptions, {
+    scales: {
+        xAxes: [{
+            scaleLabel: {
+                labelString: "Time (HH:MM)"
+            }
+        }]
+    },
+    title: {
+        text: "Light vs Time"
+    }
+});
+var full_lightOptions = $.extend(true, {}, baseGraphOptions, {
+    title: {
+        text: "Photo BioReactor Light vs Time"
+    }
+});
+// alert ("small light:"+JSON.stringify(small_lightOptions));
 
-    Chart.defaults.global.animationSteps = 50;
-    Chart.defaults.global.tooltipYPadding = 16;
-    Chart.defaults.global.tooltipCornerRadius = 0;
-    Chart.defaults.global.tooltipTitleFontStyle = "normal";
-    Chart.defaults.global.tooltipFillColor = "rgba(0,160,0,0.8)";
-    Chart.defaults.global.animationEasing = "easeOutBounce";
-    Chart.defaults.global.responsive = true;
-    Chart.defaults.global.scaleLineColor = "black";
-    Chart.defaults.global.scaleFontSize = 12;
-    Chart.defaults.global.scaleBeginAtZero= true;
-
-
-    var ctx = document.getElementById("light_canvas").getContext("2d");
-
-    var LineChartDemo = new Chart(ctx).Line(small_light_lineChartData, {
-    showTooltips:false,
-    pointDotRadius: 2,
-    bezierCurve: false,
-    scaleShowVerticalLines: false,
-    scaleGridLineColor: "black"
-    });
-
-    $(document).ready(function(){
-    $("#light_modal").on('shown.bs.modal', function () {
-    var big_ctx = document.getElementById("big_light_canvas").getContext("2d");
-
-    var LineChartDemo = new Chart(big_ctx).Line(big_light_lineChartData, {
-    pointDotRadius: 5,
-    bezierCurve: false,
-    scaleShowVerticalLines: false,
-    scaleGridLineColor: "black"
-    });
-    });
-    });
-
-  </script>
+</script>
