@@ -51,35 +51,26 @@
 
 
 @section('footer_js')
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 
 @include('common_line_chart')
-<!--
-var lineChartTemplate = {
-    fill: false,
-    lineTension: 0,
-    spanGaps: false,
-    borderColor: "rgba(220,180,0,1)",
-    pointBackgroundColor: "rgba(220,180,0,1)",
-    pointHoverBackgroundColor: "rgba(75,192,192,1)",
-    pointHoverBorderColor: "rgba(220,0,0,1)"
-}; -->
+
 @include('GasFlows.common_gasflow_charts')
 @include('LightReadings.common_lightreading_charts')
 @include('Temperatures.common_temperature_charts')
 @include('PhReadings.common_phreading_charts')
 
-
 <script>
 // Get the actual sensor values
+// route {{ $route }}
+// point count {{ count( $y_data ) }}
 var sensorValues = [@foreach ($y_data as $pt)"{{ $pt }}",@endforeach];
 
 var sensorDataSet = [ $.extend({}, lineChartTemplate, {
     data: sensorValues,
-    pointRadius: 5,
-    pointHoverRadius: 12,
-    pointHoverBorderWidth: 2
+    pointRadius: {{ count($y_data) > 120 ? 1 : 5 }},
+    pointHoverRadius: {{ count($y_data) > 120 ? 2 : 12 }},
+    pointHoverBorderWidth:  {{ count($y_data) > 120 ? 1 : 2 }},
 })];
 var sensorChartData = {
     labels: [@foreach ($x_data as $pt)"{{ $pt }}",@endforeach],

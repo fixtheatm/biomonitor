@@ -13,8 +13,9 @@
         <h4>{{ $sensor['title'] }}</h4>
         <a href='#' data-toggle="modal" data-target="#{{ $sensor['name'] }}_modal"><canvas id="{{ $sensor['name'] }}_canvas"></canvas></a>
         <div>
-          <a class="btn-success btn-xs" href="/my{{ $sensor['graph'] }}s">3 Hours</a>
-          <a class="btn-success btn-xs" href="/my{{ $sensor['graph'] }}s/24">24 Hours</a>
+          <a class="btn-success btn-xs" href="/my{{ $sensor['graph'] }}s">@lang('bioreactor.recent_3_hours')</a>
+          <a class="btn-success btn-xs" href="/my{{ $sensor['graph'] }}s/24">@lang('bioreactor.recent_1_day')</a>
+          <a class="btn-success btn-xs" href="/my{{ $sensor['graph'] }}s/168">@lang('bioreactor.recent_1_week')</a>
         </div>
       </li>
 @endforeach
@@ -22,62 +23,49 @@
   </div>
 </div>
 
-<div class="modal fade" id="raw_data_export_modal" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Raw Data Export to Excel</h4>
-      </div>
-      <div class="modal-body">
-        {!! Form::open(array('url' => '/export')) !!}
+<div class="modal fade modal-dialog modal-content" id="raw_data_export_modal" role="dialog">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">@lang('export.raw_to_spreadsheet_title')</h4>
+  </div>
+  <div class="modal-body">
 
-        <div class="form-group">
-          <div class="table table-condensed table-responsive">
-            <table class="table">
-              <tr class="info">
-                <td>
-                  {!! Form::label('gasflow_readings', 'Gas Flow Readings ') !!}
-                  {!! Form::radio('datatype_to_excel', 1, true, array('id'=>'gasflow_readings')) !!}
-                </td>
-                <td>
-                  {!! Form::label('light_readings') !!}
-                  {!! Form::radio('datatype_to_excel', 2, false, array('id'=>'light_readings')) !!}
-                </td>
-                <td>
-                  {!! Form::label('temp_readings', 'Temperature Readings ') !!}
-                  {!! Form::radio('datatype_to_excel', 3, false, array('id'=>'temp_readings')) !!}
-                </td>
-                <td>
-                  {!! Form::label('ph_readings', 'pH Readings') !!}
-                  {!! Form::radio('datatype_to_excel', 2, false, array('id'=>'ph_readings')) !!}
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div class="table table-condensed table-responsive">
-            <table class="table">
-              <tr class="info">
-                <td>
-                  {!! Form::label('start_date') !!}
-                  {!! Form::date('start_date', \Carbon\Carbon::now()) !!}
-                </td>
-                <td>
-                  {!! Form::label('end_date') !!}
-                  {!! Form::date('end_date', \Carbon\Carbon::now()) !!}
-                </td>
-              </tr>
-            </table>
-          </div>
+    {!! Form::open(array('url' => '/export')) !!}
+      <div class="form-group">
+        <div class="table table-condensed table-responsive">
+          <table class="table">
+            <tr class="info">
+@foreach ($sensors as $index => $sensor)
+              <td>
+                {!! Form::label($sensor['name'] . '_readings', Lang::get('export.' . $sensor['name'] . 's_select')) !!}
+                {!! Form::radio('datatype_to_excel', $index, $index == 1, array('id'=>$sensor['name'] . '_readings')) !!}
+              </td>
+@endforeach
+            </tr>
+          </table>
         </div>
-
-        <div class="modal-footer">
-          {!! Form::submit('Go', array('class'=>'btn btn-success btn-sm')) !!}
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <div class="table table-condensed table-responsive">
+          <table class="table">
+            <tr class="info">
+              <td>
+                {!! Form::label('start_date') !!}
+                {!! Form::date('start_date', \Carbon\Carbon::now()) !!}
+              </td>
+              <td>
+                {!! Form::label('end_date') !!}
+                {!! Form::date('end_date', \Carbon\Carbon::now()) !!}
+              </td>
+            </tr>
+          </table>
         </div>
-        {!! Form::close() !!}
       </div>
-    </div>
+
+      <div class="modal-footer">
+        {!! Form::submit('Go', array('class'=>'btn btn-success btn-sm')) !!}
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    {!! Form::close() !!}
+
   </div>
 </div>
 

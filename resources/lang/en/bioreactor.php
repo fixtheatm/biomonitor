@@ -25,6 +25,12 @@ return [
   'after_end_time'            => ' UTC',
   'before_end_time'           => ' Ending at: ',
 
+  // full graph requests
+  'recent_3_hours'            => '3 hours',
+  'recent_1_day'              => '24 hours',
+  'recent_1_week'             => '1 week',
+
+  // sensor specific
   'gasflow_title'             => 'Gas Flow',
   'flow_head'                 => 'mL/min',
   'flow_axis_small'           => 'mL/min',

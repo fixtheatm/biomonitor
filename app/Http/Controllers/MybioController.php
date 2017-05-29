@@ -53,37 +53,38 @@ class MybioController extends Controller
 
     $view_end_time = $end_datetime->toDateTimeString(); // locale specific?
     $sensor_ref = [
-      'gasflow'         => [
-        'name' => 'gasflow',
-        'graph' => 'gasflow',
-        'title' => Lang::get('bioreactor.gasflow_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $gasflow_axis_data['x_data'],
-        'y_data'    => $gasflow_axis_data['y_data'],
+      '1' => [
+        'name'        => 'gasflow',
+        'graph'       => 'gasflow',
+        'title'       => Lang::get('bioreactor.gasflow_title' ),
+        'end_datetime'=> $view_end_time,
+        'x_data'      => $gasflow_axis_data['x_data'],
+        'y_data'      => $gasflow_axis_data['y_data'],
       ],
-      'light'           => [
-        'name' => 'light',
-        'graph' => 'lightreading',
-        'title' => Lang::get('bioreactor.light_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $light_axis_data['x_data'],
-        'y_data'    => $light_axis_data['y_data'],
+      '2' => [
+        'name'        => 'light',
+        'graph'       => 'lightreading',
+        'title'       => Lang::get('bioreactor.light_title' ),
+        'end_datetime'=> $view_end_time,
+        'x_data'      => $light_axis_data['x_data'],
+        'y_data'      => $light_axis_data['y_data'],
       ],
-      'temperature'     => [
-        'name' => 'temp',
-        'graph' => 'temperature',
-        'title' => Lang::get('bioreactor.temperature_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $temp_axis_data['x_data'],
-        'y_data'    => $temp_axis_data['y_data'],
+      '3' => [
+        'name'        => 'temp',
+        'graph'       => 'temperature',
+        'title'       => Lang::get('bioreactor.temperature_title' ),
+        'end_datetime'=> $view_end_time,
+        'x_data'      => $temp_axis_data['x_data'],
+        'y_data'      => $temp_axis_data['y_data'],
       ],
-      'ph'              => [
-        'name' => 'ph',
-        'graph' => 'phreading',
-        'title' => Lang::get('bioreactor.ph_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $ph_axis_data['x_data'],
-        'y_data'    => $ph_axis_data['y_data'],
+      '4' => [
+        'name'        => 'ph',
+        'graph'       => 'phreading',
+        'title'       => Lang::get('bioreactor.ph_title' ),
+        'export_idx'  => 4,
+        'end_datetime'=> $view_end_time,
+        'x_data'      => $ph_axis_data['x_data'],
+        'y_data'      => $ph_axis_data['y_data'],
       ],
     ];
 
