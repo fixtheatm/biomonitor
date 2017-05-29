@@ -57,10 +57,11 @@ class Controller extends BaseController
    *
    * @return Bioreactor
    */
-  public function getBioreactorFromId($id) {
+  public function getBioreactorFromId( $id )
+  {
 
     // correct id from uri if in the wrong format (or missing)!!
-    $id = Bioreactor::formatDeviceid($id);
+    $id = Bioreactor::formatDeviceid( $id );
 
     // load the record from the table
     try {
@@ -567,7 +568,7 @@ class Controller extends BaseController
    *
    * @return Carbon datetime of last record
    */
-  public function getgasflowData($id, $data_size=3)
+  public function getGasflowData( $id, $data_size=3 )
   {
 
     // correct id from uri if in the wrong format (or missing)!!
@@ -615,56 +616,59 @@ class Controller extends BaseController
   }
 
   /**
-   * Builds the x and y Gasflow graph arrays that are passed to the
-   * javascript Chart builder. The Gasflow records must already
-   * have been loaded into the Gasflow Collection in this class
+   * Build x and y, time and measurement arrays for recorded gas flows
+   *
+   * Data structured to be compatible with the javascript chart builder.
+   *
+   * The Gasflow records must already have been loaded into the Gasflow
+   * Collection in this class
    *
    * @param string $x_axis_style ='default' 'default' is time. 'dot' is a dot
    *
-   * @throws Exception if Gasflow have not been loaded from table yet
+   * @throws Exception if Gasflow has not been loaded from table yet
    *
-   * @return Array Mixed  x and y Gasflow chart data
+   * @return Array 2 entries, with x and y Gasflow data
    */
-  public function _buildXYGasflowData($x_axis_style='default')
+  public function _buildXYGasflowData( $x_axis_style='default' )
   {
     // put the data in the correct form for the charts JS library
     // generate an x and y array
-    // x holds labels as mm:ss format
-    // y holds y_gasflows as nn.nnn format
+    // x holds time labels in hh:mm format
+    // y holds gas flow measurements in nnnnn.nn format
 
     $this->x_gasflows = [];
     $this->y_gasflows = [];
 
     // abort if the gasflows have not been loaded
     // indicates that getgasflow data has not been called
-    if ( ! is_null ($this->gasflows) && count($this->gasflows)>0) {
+    if ( ! is_null( $this->gasflows ) && count( $this->gasflows ) > 0 ) {
 
       // reverse the order to make the graph more human like
       $rev_gasflow = $this->gasflows->reverse();
 
       foreach ($rev_gasflow as $gasflow) {
 
-         $dt = new carbon($gasflow->recorded_on);
+        $dt = new carbon( $gasflow->recorded_on );
 
-        switch($x_axis_style)
+        switch( $x_axis_style )
         {
         case 'dot':
           $this->x_gasflows[] = '.';
           break;
         default:
-          $this->x_gasflows[] = $dt->format('h:i');
+          $this->x_gasflows[] = $dt->format( 'h:i' );
           break;
         }
-        $this->y_gasflows[] = sprintf("%5.2f",10.0*$gasflow->flow);
+        $this->y_gasflows[] = sprintf( "%5.2f", 10.0 * $gasflow->flow );
       }
     }
 
     // just put something in if there is no data
     // otherwise no graph will be generated
-    if ( is_null ($this->gasflows) || (count($this->gasflows) < 1) )
+    if ( is_null( $this->gasflows ) || ( count( $this->gasflows ) < 1 ))
     {
-      $this->x_gasflows[]='0';
-      $this->y_gasflows[]=0;
+      $this->x_gasflows[] = '0';
+      $this->y_gasflows[] = 0;
     }
 
     //dd($this->x_gasflows);

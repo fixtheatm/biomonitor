@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Bioreactor extends Model
 {
-	/*
+	/**
 	 * correct id if in the wrong format (or missing)!!
 	 *
-	 *
-	 *
+	 * @param $id device id
+	 * @return String id as 5 digits with leading zeros
 	 */
-	public static function formatDeviceid($id) {
-		return sprintf("%05d", $id);
+	public static function formatDeviceid( $id ) {
+		return sprintf( "%05d", $id );
 	}
 
 	/**
@@ -31,13 +31,13 @@ class Bioreactor extends Model
 			// no records ??
 
 			return $this->formatDeviceid(1);
-		}	
+		}
 		if ( is_numeric($bioreactor->deviceid)) {
 			return $this->formatDeviceid($bioreactor->deviceid + 1);
 		}
 		else {
 			return $this->formatDeviceid(1);
-		}		
+		}
 	}
-			
+
 }

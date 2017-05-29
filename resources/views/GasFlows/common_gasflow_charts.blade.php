@@ -11,14 +11,14 @@ var baseGraphOptions = {
             },
             scaleLabel: {
                 display: true,
-                labelString: "ml/min",
+                labelString: "{{ Lang::get('bioreactor.ml_per_min_full') }}",
                 fontSize: 14
             }
         }],
         xAxes: [{
             scaleLabel: {
                 display: true,
-                labelString: "Time (HH:MM) ending at: {{ $end_datetime }}",
+                labelString: "{{ Lang::get('bioreactor.before_end_time') }}{{ $end_datetime }}{{ Lang::get('bioreactor.after_end_time') }}",
                 fontSize: 14
             }
         }]
@@ -46,17 +46,17 @@ var big_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         xAxes: [{
             scaleLabel: {
-                labelString: "Time (HH:MM)"
+                labelString: "{{ Lang::get('bioreactor.time_axis_big') }}"
             }
         }]
     },
     title: {
-        text: "Gas Flow vs Time"
+        text: "{{ Lang::get('bioreactor.chart_title_big') }}"
     }
 });
 var full_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
     title: {
-        text: "Photo BioReactor Gas Flow vs Time"
+        text: "{{ Lang::get('bioreactor.chart_title_full') }}"
     }
 });
 // alert ("small gas flow:"+JSON.stringify(small_gasflowOptions));
