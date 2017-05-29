@@ -62,7 +62,7 @@ return [
   'lightreadings_data'    => 'Light Reading Data',
   'lightreadings_description'  => 'Light Readings for Bioreactor',
   'lightreadings_sheet_name'  => 'Light Reading Data',
-  'lux_col_title'        => 'Lux',
+  'lux_col_title'        => 'µmol photons/(m^2 S)',
 
   // gas flow data export
 

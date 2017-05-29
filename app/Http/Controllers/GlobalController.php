@@ -78,7 +78,7 @@ class GlobalController extends Controller
     $temp_axis_data = $this->_buildXYTemperatureData(); // Degrees Celsius
 
     $this->getLightreadingData( $id );
-    $light_axis_data = $this->_buildXYLightreadingData(); // lux as nnnnn.n
+    $light_axis_data = $this->_buildXYLightreadingData(); // intensity as nnnnn.n
 
     $this->getGasflowData( $id );
     $gasflow_axis_data = $this->_buildXYGasflowData(); // milliliters/minute

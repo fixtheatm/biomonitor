@@ -8,7 +8,7 @@ var baseGraphOptions = {
         yAxes: [{
             scaleLabel: {
                 display: true,
-                labelString: "lux",
+                labelString: "µmol photons/(m^2 S)",
                 fontSize: 14
             }
         }],
@@ -29,6 +29,7 @@ var small_lightOptions = $.extend(true, {}, baseGraphOptions, {
               suggestedMin: 0,
             },
             scaleLabel: {
+                labelString: "µmol γ/(m^2 S)",
                 fontSize: 12
             }
         }],

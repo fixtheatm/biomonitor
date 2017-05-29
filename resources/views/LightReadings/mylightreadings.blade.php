@@ -13,7 +13,7 @@
 			<li class="active"><a data-toggle="pill" href="#light_graph">Graph</a></li>
 			<li><a data-toggle="pill" href="#lux_list">Data Point List</a></li>
 		</ul>
- 
+
 		<div class="tab-content">
 
 			<div id="light_graph" class="tab-pane fade in active">
@@ -22,13 +22,13 @@
 				<div style='width:500px'><canvas id="lux_canvas"></canvas></div>
 			</div>
 			<div id="lux_list" class="tab-pane fade">
-				<div style="height:3px"></div>	
-				<div class="table table-condensed table-responsive" style='overflow-y:scroll;height:275px'>          
+				<div style="height:3px"></div>
+				<div class="table table-condensed table-responsive" style='overflow-y:scroll;height:275px'>
 					<table class="table">
 						<thead>
 							<tr class="info">
 								<th>Date and Time</th>
-								<th>Lux (Illumination)</th>
+								<th>micro mols photons / (m^s S) (Illumination)</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -45,11 +45,11 @@
 		</div>
 
 
-	  </div> 
+	  </div>
 
 
-	 </div> 
-   </div> 
+	 </div>
+   </div>
 </div>
 
 @stop
@@ -80,7 +80,7 @@
 	Chart.defaults.global.responsive = true;
 	Chart.defaults.global.scaleLineColor = "black";
 	Chart.defaults.global.scaleFontSize = 12;
-	Chart.defaults.global.scaleBeginAtZero= true;	
+	Chart.defaults.global.scaleBeginAtZero= true;
 
 
 	var ctx = document.getElementById("lux_canvas").getContext("2d");
@@ -94,4 +94,3 @@
   </script>
 
 @stop
-

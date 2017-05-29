@@ -24,16 +24,16 @@ class MylightreadingsController extends Controller
     }
 
 	/*
-	 * Show the users light readings 
+	 * Show the users light readings
 	 *
 	 *
 	 *
 	 */
-	public function index($hrs=3) {	
+	public function index($hrs=3) {
 
 	    //dd($hrs);
 
-		// the deviceid should not be blank or bogus as 
+		// the deviceid should not be blank or bogus as
 		// it is from the user record enforced with a foreign key constraint
 
 		$id = Auth::user()->deviceid;
@@ -55,7 +55,7 @@ class MylightreadingsController extends Controller
 		// put the data in the correct form for the charts JS library
 		// generate an x and y array
 		// x holds labels as mm:ss format
-		// y holds lux as nnnnn.n format
+		// y holds µmol photons / (m^2 S) as nnnnn.n format
 
 		$axis_data = $this->_buildXYLightreadingData();
 		//dd($axis_data);
@@ -69,7 +69,7 @@ class MylightreadingsController extends Controller
 									 'x_lightreading_data'	=> $axis_data['x_data'],
 									 'y_lightreading_data'	=> $axis_data['y_data'],
 									 'dbdata'			=> $this->lightreadings
-									]);	
+									]);
 
     }
 

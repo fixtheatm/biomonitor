@@ -42,6 +42,7 @@ class ApiController extends Controller
 
   dd('In development');
 
+    // temperature readings
     $temp_data = array( [
       'deviceid'   => '34234',
       'temp'       =>  '21.012',
@@ -54,7 +55,7 @@ class ApiController extends Controller
       ]
       );
 
-    // hpd ? lux not light?
+    // light intensity readings
     $light_data = array( [
       'deviceid'   => '34234',
       'light'      =>  '21.012',
@@ -67,6 +68,7 @@ class ApiController extends Controller
       ]
       );
 
+    // gas flow «volume¦rate» readings
     $flow_data = array( [
       'deviceid'   => '34234',
       'flow'       =>  '21.012',
@@ -79,6 +81,7 @@ class ApiController extends Controller
       ]
       );
 
+    // potential of hydrogen: acidity or basicity of aqueous solution
     $ph_data = array( [
       'deviceid'   => '34234',
       'ph'         =>  '21.012',

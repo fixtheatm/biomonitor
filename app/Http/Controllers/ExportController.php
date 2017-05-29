@@ -31,12 +31,12 @@ class ExportController extends Controller
 
 	/**
 	 * Download GasFlows as Excel spreadsheet.
-	 * 
+	 *
 	 *
 	 * @param Request $request - data from the form
 	 *
 	 */
-	public function exportGasFlows(Request $request) {	 
+	public function exportGasFlows(Request $request) {
 
 		// Get the deviceid of the Bioreactor that the user has acess to
 
@@ -84,7 +84,7 @@ class ExportController extends Controller
 				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
 				$flow_col_title				= Lang::get('export.flow_col_title');
 
-				$sheet->row(1, array($starting_on,$request->start_date)); 
+				$sheet->row(1, array($starting_on,$request->start_date));
 				$sheet->row(2, array($ending_on,$request->end_date));
 
 				$sheet->row(4, array($bioreactor_id_col_title, $flow_col_title,
@@ -94,18 +94,18 @@ class ExportController extends Controller
 			});
 
 		})->export('xls');
-	
+
 	}
 
 	/**
 	 * Download Temperatures as Excel spreadsheet.
-	 * 
+	 *
 	 *
 	 * @param Request $request - data from the form
 	 *
 	 */
-	public function exportTemperatures(Request $request) {	
-	 
+	public function exportTemperatures(Request $request) {
+
 		// Get the deviceid of the Bioreactor that the user has acess to
 
 		$deviceid = Auth::user()->deviceid;
@@ -115,7 +115,7 @@ class ExportController extends Controller
 		// get the records from the database
 		// based on the deviceid and the date range
 
-		$temperatures = Temperature::select('deviceid', 'temperature', 
+		$temperatures = Temperature::select('deviceid', 'temperature',
 							DB::raw("DATE(recorded_on) as date_recorded"), DB::raw("TIME(recorded_on) as time_recorded"))
 			->where('deviceid','=',$deviceid)
 			->where('recorded_on', '>=', $request->start_date)
@@ -153,7 +153,7 @@ class ExportController extends Controller
 				$temperature_col_title		= Lang::get('export.temperature_col_title');
 
 
-				$sheet->row(1, array($starting_on,$request->start_date)); 
+				$sheet->row(1, array($starting_on,$request->start_date));
 				$sheet->row(2, array($ending_on,$request->end_date));
 
 				$sheet->row(4, array($bioreactor_id_col_title, $temperature_col_title,
@@ -163,18 +163,18 @@ class ExportController extends Controller
 			});
 
 		})->export('xls');
-	
+
 	}
 
 	/**
 	 * Download LightReadings as Excel spreadsheet.
-	 * 
+	 *
 	 *
 	 * @param Request $request - data from the form
 	 *
 	 */
-	public function exportLightReadings(Request $request) 
-	{	 
+	public function exportLightReadings(Request $request)
+	{
 		// Get the deviceid of the Bioreactor that the user has acess to
 
 		$deviceid = Auth::user()->deviceid;
@@ -222,28 +222,28 @@ class ExportController extends Controller
 				$bioreactor_id_col_title	= Lang::get('export.bioreactor_id_col_title');
 				$lux_col_title				= Lang::get('export.lux_col_title');
 
-				$sheet->row(1, array($starting_on,$request->start_date)); 
+				$sheet->row(1, array($starting_on,$request->start_date));
 				$sheet->row(2, array($ending_on,$request->end_date));
 
-				$sheet->row(4, array($bioreactor_id_col_title, 'Lux',
+				$sheet->row(4, array($bioreactor_id_col_title, 'µmol photons/(m^2 S)',
 								$date_recorded_col_title,$time_recorded_col_title));
 
 				$sheet->fromArray($lightreadings, null, 'A5', false, false);
 			});
 
 		})->export('xls');
-	
-	
+
+
 	}
 
 	/**
 	 * Download data as Excel spreadsheet.
-	 * User will have selected which datatype and a date range 
+	 * User will have selected which datatype and a date range
 	 * on the form. This handles the Form post.
 	 *
 	 * @param Request $request - data from the form
 	 */
-	public function export(Request $request) {	
+	public function export(Request $request) {
 
 		//dd($request);
 
