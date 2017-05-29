@@ -17,14 +17,14 @@ var baseGraphOptions = {
             },
             scaleLabel: {
                 display: true,
-                labelString: "Degrees Celsius",
+                labelString: "{{ Lang::get('bioreactor.temperature_axis_full') }}",
                 fontSize: 14
             }
         }],
         xAxes: [{
             scaleLabel: {
                 display: true,
-                labelString: "Time (HH:MM) ending at: {{ $end_datetime }}",
+                labelString: "{{ Lang::get('bioreactor.time_before_end') }}{{ $end_datetime }}{{ Lang::get('bioreactor.after_end_time') }}",
                 fontSize: 14
             }
         }]
@@ -35,7 +35,7 @@ var small_tempOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         yAxes: [{
             scaleLabel: {
-                labelString: "Celsius",
+                labelString: "{{ Lang::get('bioreactor.temperature_axis_small') }}",
                 fontSize: 12
             }
         }],
@@ -53,19 +53,18 @@ var big_tempOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         xAxes: [{
             scaleLabel: {
-                labelString: "Time (HH:MM)"
+                labelString: "{{ Lang::get('bioreactor.time_axis_big') }}"
             }
         }]
     },
     title: {
-        text: "Temperature vs Time"
+        text: "{{ Lang::get('bioreactor.chart_temp_title_big') }}"
     }
 });
 var full_tempOptions = $.extend(true, {}, baseGraphOptions, {
     title: {
-        text: "Photo BioReactor Temperature versus Time"
+        text: "{{ Lang::get('bioreactor.chart_temp_title_full') }}"
     }
 });
-// alert ("small temperature:"+JSON.stringify(small_tempOptions));
 
 </script>

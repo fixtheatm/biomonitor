@@ -11,14 +11,14 @@ var baseGraphOptions = {
             },
             scaleLabel: {
                 display: true,
-                labelString: "{{ Lang::get('bioreactor.ml_per_min_full') }}",
+                labelString: "{{ Lang::get('bioreactor.flow_axis_full') }}",
                 fontSize: 14
             }
         }],
         xAxes: [{
             scaleLabel: {
                 display: true,
-                labelString: "{{ Lang::get('bioreactor.before_end_time') }}{{ $end_datetime }}{{ Lang::get('bioreactor.after_end_time') }}",
+                labelString: "{{ Lang::get('bioreactor.time_before_end') }}{{ $end_datetime }}{{ Lang::get('bioreactor.after_end_time') }}",
                 fontSize: 14
             }
         }]
@@ -29,6 +29,7 @@ var small_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         yAxes: [{
             scaleLabel: {
+                labelString: "{{ Lang::get('bioreactor.flow_axis_small') }}",
                 fontSize: 12
             }
         }],
@@ -51,14 +52,13 @@ var big_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
         }]
     },
     title: {
-        text: "{{ Lang::get('bioreactor.chart_title_big') }}"
+        text: "{{ Lang::get('bioreactor.chart_gas_title_big') }}"
     }
 });
 var full_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
     title: {
-        text: "{{ Lang::get('bioreactor.chart_title_full') }}"
+        text: "{{ Lang::get('bioreactor.chart_gas_title_full') }}"
     }
 });
-// alert ("small gas flow:"+JSON.stringify(small_gasflowOptions));
 
 </script>

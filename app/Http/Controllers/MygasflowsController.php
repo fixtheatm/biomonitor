@@ -25,7 +25,7 @@ class MygasflowsController extends Controller
   }
 
   /**
-   * Show the users gas production flows
+   * Show the users recent gas production flows
    *
    * @param int $hrs default 3. number of hours of data to view. (only 3 or 24 right now)
    */
@@ -38,7 +38,7 @@ class MygasflowsController extends Controller
     // load the user´s bioreactor record from the table
     $bioreactor = $this->getBioreactorFromId( $id );
 
-    // load $this->gasflows data for this site
+    // load $this->gasflows data for this bioreactor (device) site
     // returns recorded_on date of last (most recent) record
     $end_datetime = $this->getGasflowData( $id, $hrs );
     if ( is_null( $this->gasflows )) {
@@ -49,11 +49,11 @@ class MygasflowsController extends Controller
     $chart_data = $this->_buildXYGasflowData();
 
     // pass the formatted data to the view
-    return view('MyBio.sensor_graph', [
+    return view( 'MyBio.sensor_graph', [
       'route'           => 'mygasflows',
       'sensor_name'     => 'gasflow',
       'value_field'     => 'flow',
-      'value_label'     => Lang::get('bioreactor.ml_per_min_head'),
+      'value_label'     => Lang::get('bioreactor.flow_head'),
       'id'              => $id,
       'bioreactor'      => $bioreactor,
       'end_datetime'    => $end_datetime->toDateTimeString(),

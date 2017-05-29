@@ -852,7 +852,7 @@ class Controller extends BaseController
     if (is_null ($this->phreadings) || (count($this->phreadings) < 1) )
     {
       $this->x_phreadings[]='0';
-      $this->y_phreadings[]=0;
+      $this->y_phreadings[]=7;
     }
 
     return [

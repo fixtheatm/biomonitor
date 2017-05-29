@@ -6,16 +6,19 @@
 var baseGraphOptions = {
     scales: {
         yAxes: [{
+            ticks: {
+                beginAtZero: false
+            },
             scaleLabel: {
                 display: true,
-                labelString: "pH",
+                labelString: "{{ Lang::get('bioreactor.ph_axis_full') }}",
                 fontSize: 14
             }
         }],
         xAxes: [{
             scaleLabel: {
                 display: true,
-                labelString: "Time (HH:MM) ending at: {{ $end_datetime }}",
+                labelString: "{{ Lang::get('bioreactor.time_before_end') }}{{ $end_datetime }}{{ Lang::get('bioreactor.after_end_time') }}",
                 fontSize: 14
             }
         }]
@@ -25,9 +28,6 @@ var baseGraphOptions = {
 var small_phOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         yAxes: [{
-            ticks: {
-              suggestedMin: 0,
-            },
             scaleLabel: {
                 fontSize: 12
             }
@@ -46,19 +46,18 @@ var big_phOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         xAxes: [{
             scaleLabel: {
-                labelString: "Time (HH:MM)"
+                labelString: "{{ Lang::get('bioreactor.time_axis_big') }}"
             }
         }]
     },
     title: {
-        text: "pH vs Time"
+        text: "{{ Lang::get('bioreactor.chart_ph_title_big') }}"
     }
 });
 var full_phOptions = $.extend(true, {}, baseGraphOptions, {
     title: {
-        text: "Photo BioReactor pH vs Time"
+        text: "{{ Lang::get('bioreactor.chart_ph_title_full') }}"
     }
 });
-// alert ("small ph:"+JSON.stringify(small_phOptions));
 
 </script>
