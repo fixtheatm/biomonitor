@@ -12,65 +12,65 @@
 
 {!! Form::model($bioreactor, array('class' => 'form')) !!}
 
-{!! Form::hidden('id', null) !!} 
+{!! Form::hidden('id', null) !!}
 
 @if ($bioreactor->id < '1')
 <div class="form-group">
     {!! Form::label('Device ID') !!}
-    {!! Form::text('deviceid', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('deviceid', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Device ID')) !!}
 </div>
 @endif
 
 <div class="form-group">
     {!! Form::label('Name') !!}
-    {!! Form::text('name', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('name', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Name')) !!}
     {!! Form::label('City') !!}
-    {!! Form::text('city', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('city', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'City')) !!}
     {!! Form::label('Country') !!}
-    {!! Form::text('country', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('country', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Country')) !!}
 </div>
 
 <div class="form-group">
     {!! Form::label('Latitude') !!}
-    {!! Form::text('latitude', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('latitude', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Latitude')) !!}
 
     {!! Form::label('Longitude') !!}
-    {!! Form::text('longitude', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('longitude', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Longitude')) !!}
 </div>
 
 <div class="form-group">
     {!! Form::label('System E-mail Address') !!}
-    {!! Form::text('email', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('email', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'E-mail address')) !!}
 </div>
 
 
 <div class="form-group">
-    {!! Form::submit('Save', 
+    {!! Form::submit('Save',
       array('class'=>'btn btn-primary')) !!}
 	  &nbsp;
 <a href="/bioreactors">
-    {!! Form::button('Cancel', 
+    {!! Form::button('Cancel',
       array('class'=>'btn')) !!}
 </a>
 </div>

@@ -23,7 +23,7 @@ class BioreactorController extends Controller
 	 *
 	 */
 	protected function checkIfIsAnAdmin() {
-		
+
 		if ( !Auth::user()->isadmin )
 		{
 			$message = Lang::get('export.you_are_not_an_admin');
@@ -37,7 +37,7 @@ class BioreactorController extends Controller
 	 *
 	 *
 	 */
-	public function index() {	
+	public function index() {
 
 		// die of this is not an admin
 		$this->checkIfIsAnAdmin();
@@ -51,7 +51,7 @@ class BioreactorController extends Controller
 	    return view('Bioreactor.index', ['route'		=> 'bioreactors',
 		                             'header_title'		=> Lang::get('export.all_bioreactors'),
 									 'dbdata'			=> $bioreactors
-									]);	
+									]);
 	}
 
 
@@ -61,7 +61,7 @@ class BioreactorController extends Controller
 	 *
 	 *
 	 */
-	public function excel() {	
+	public function excel() {
 
 		// die of this is not an admin
 		$this->checkIfIsAnAdmin();
@@ -104,10 +104,10 @@ class BioreactorController extends Controller
 				$bioreactors_latitude_col_title	= Lang::get('export.bioreactors_latitude_col_title');
 				$bioreactors_longitude_col_title	= Lang::get('export.bioreactors_longitude_col_title');
 
-				$sheet->row(1, array($bioreactors_name_col_title,$bioreactor_id_col_title, 
-						$bioreactors_city_col_title, $bioreactors_country_col_title, 
+				$sheet->row(1, array($bioreactors_name_col_title,$bioreactor_id_col_title,
+						$bioreactors_city_col_title, $bioreactors_country_col_title,
 						$bioreactors_last_datasync_col_title,
-						$created_on_col_title, $last_updated_col_title, 
+						$created_on_col_title, $last_updated_col_title,
 						$bioreactors_latitude_col_title, $bioreactors_longitude_col_title));
 
 				$sheet->fromArray($bioreactors, null, 'A2', false, false);
@@ -143,7 +143,7 @@ class BioreactorController extends Controller
 	    return view('Bioreactor.bioreactor', [	'route'			=> 'bioreactor',
  									'header_title'				=> Lang::get('export.edit_bioreactor'),
 									'bioreactor'				=> $bioreactor
-								]);	
+								]);
     }
 
 	/**
@@ -166,7 +166,7 @@ class BioreactorController extends Controller
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
-		
+
 		//dd($bioreactor);
 
 		$bioreactor->delete();
@@ -196,14 +196,14 @@ class BioreactorController extends Controller
 	    return view('Bioreactor.bioreactor', [	'route'		=> 'bioreactor',
  									'header_title'			=> Lang::get('export.add_bioreactor'),
 									'bioreactor'			=> $bioreactor
-								]);	
+								]);
     }
 
 	/**
-	 * Process a post from editing a bioreactor or creating a new 
+	 * Process a post from editing a bioreactor or creating a new
 	 *  bioreactor.
 	 *
-	 * @param Request $request the posted data 
+	 * @param Request $request the posted data
 	 */
     public function update(Request $request)
     {
@@ -237,7 +237,7 @@ class BioreactorController extends Controller
 		$bioreactor->latitude	= $request->latitude;
 		$bioreactor->longitude	= $request->longitude;
 		$bioreactor->email		= $request->email;
-		
+
 
 		// set the last updated date to now
 		$bioreactor->updated_at = Carbon::now();

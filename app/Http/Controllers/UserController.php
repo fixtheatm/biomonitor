@@ -35,7 +35,7 @@ class UserController extends Controller
 	 *
 	 */
 	protected function checkIfIsAnAdmin() {
-		
+
 		if ( !Auth::user()->isadmin )
 		{
 			$message = Lang::get('export.you_are_not_an_admin');
@@ -49,7 +49,7 @@ class UserController extends Controller
 	 *
 	 *
 	 */
-	public function index() {	
+	public function index() {
 
 		// die of this is not an admin
 		$this->checkIfIsAnAdmin();
@@ -63,7 +63,7 @@ class UserController extends Controller
 	    return view('User.index', [	'route'				=> 'users',
 									'header_title'		=> Lang::get('export.all_users'),
 									'dbdata'			=> $users
-									]);	
+									]);
 	}
 
 	/**
@@ -72,7 +72,7 @@ class UserController extends Controller
 	 *
 	 *
 	 */
-	public function excel() {	
+	public function excel() {
 
 		// die of this is not an admin
 		$this->checkIfIsAnAdmin();
@@ -151,7 +151,7 @@ class UserController extends Controller
  									'header_title'		=> Lang::get('export.edit_user'),
 									'user'				=> $user,
 									'bioreactors'		=> $bioreactors
-								]);	
+								]);
     }
 
 	/**
@@ -180,7 +180,7 @@ class UserController extends Controller
 			dd($message);
 			//return Redirect::to('error')->with('message', $message);
 		}
-		
+
 		//dd($user);
 
 		$user->delete();
@@ -212,14 +212,14 @@ class UserController extends Controller
  									'header_title'		=> Lang::get('export.add_user'),
 									'user'				=> $user,
 									'bioreactors'		=> $bioreactors
-								]);	
+								]);
     }
 
 	/**
-	 * Process a post from editing a user or creating a new 
+	 * Process a post from editing a user or creating a new
 	 *  user.
 	 *
-	 * @param Request $request the posted data 
+	 * @param Request $request the posted data
 	 */
     public function update(Request $request)
     {
@@ -251,7 +251,7 @@ class UserController extends Controller
 		$user->email = $request->email;
 		$user->deviceid = $request->deviceid;
 
-		// since isadmin is a checkbox, it won't be passed if it wasn't 
+		// since isadmin is a checkbox, it won't be passed if it wasn't
 		// checked off
 		if ($request->isadmin===null)
 			$user->isadmin='0';

@@ -39,15 +39,15 @@ class PasswordController extends Controller
 
 	    return view('Password.password', [	'route'				=> 'password',
 									'user'				=> $user
-								]);	
-	
+								]);
+
 	}
 
 	/**
-	 * Process a post from editing the logged in user 
-	 *  
+	 * Process a post from editing the logged in user
 	 *
-	 * @param Request $request the posted data 
+	 *
+	 * @param Request $request the posted data
 	 */
 	public function update(Request $request)
 	{
@@ -69,6 +69,6 @@ class PasswordController extends Controller
 		// of the admin is doing it from the global user list
 		//
 		return redirect($request->GoBackTo);
-	
+
 	}
 }

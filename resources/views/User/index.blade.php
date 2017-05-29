@@ -11,7 +11,7 @@
 		</div>
 		<div class="tab-content">
 
-			<div class="table table-condensed table-responsive">          
+			<div class="table table-condensed table-responsive">
 			<table class="table">
 				<thead>
 					<tr class="info">

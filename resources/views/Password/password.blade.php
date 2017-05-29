@@ -25,11 +25,11 @@
 </div>
 
 <div class="form-group">
-    {!! Form::submit('Save', 
+    {!! Form::submit('Save',
       array('class'=>'btn btn-primary', 'onClick' => 'return (passwordChecker())' )) !!}
 	  &nbsp;
 <a href="{{ URL::previous() }}">
-    {!! Form::button('Cancel', 
+    {!! Form::button('Cancel',
       array('class'=>'btn')) !!}
 </a>
 </div>

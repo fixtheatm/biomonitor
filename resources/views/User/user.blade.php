@@ -12,30 +12,30 @@
 
 {!! Form::model($user, array('class' => 'form')) !!}
 
-{!! Form::hidden('id', null) !!} 
+{!! Form::hidden('id', null) !!}
 
 <div class="form-group">
     {!! Form::label('Name') !!}
-    {!! Form::text('name', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('name', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Name')) !!}
 </div>
 
 <div class="form-group">
     {!! Form::label('E-mail Address') !!}
-    {!! Form::text('email', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('email', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'E-mail address')) !!}
 </div>
 
 @if ($user->id < '1')
 <div class="form-group">
     {!! Form::label('Password') !!}
-    {!! Form::text('password', null, 
-        array('required', 
-              'class'=>'form-control', 
+    {!! Form::text('password', null,
+        array('required',
+              'class'=>'form-control',
               'placeholder'=>'Password')) !!}
 </div>
 @endif
@@ -51,11 +51,11 @@
 </div>
 
 <div class="form-group">
-    {!! Form::submit('Save', 
+    {!! Form::submit('Save',
       array('class'=>'btn btn-primary')) !!}
 	  &nbsp;
 <a href="/users">
-    {!! Form::button('Cancel', 
+    {!! Form::button('Cancel',
       array('class'=>'btn')) !!}
 </a>
 </div>
