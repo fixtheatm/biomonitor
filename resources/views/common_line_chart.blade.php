@@ -40,5 +40,28 @@ var lineChartTemplate = {
     pointHoverBackgroundColor: "rgba(75,192,192,1)",
     pointHoverBorderColor: "rgba(220,0,0,1)"
 };
+var lineOptionsTemplate = {
+    scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: false
+            },
+            scaleLabel: {
+                display: true,
+                fontSize: 14
+            }
+        }],
+        xAxes: [{
+            gridLines: {
+                display: false
+            },
+            scaleLabel: {
+                display: true,
+                fontSize: 14
+            }
+
+        }]
+    }
+};
 
 </script>

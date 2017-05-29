@@ -11,7 +11,7 @@
 // alert("µ");
 // Only the final hard-coded string actually works
 // labelString: "{{ Lang::get('bioreactor.intensity_axis_full') }}",
-var baseGraphOptions = {
+var baseGraphOptions = $.extend(true, {}, lineOptionsTemplate, {
     scales: {
         yAxes: [{
             scaleLabel: {
@@ -28,15 +28,12 @@ var baseGraphOptions = {
             }
         }]
     }
-};
+});
 
 // labelString: "{{ Lang::get('bioreactor.intensity_axis_small') }}",
 var small_lightOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         yAxes: [{
-            ticks: {
-              suggestedMin: 0,
-            },
             scaleLabel: {
                 labelString: "µmol γ/(m^2 S)",
                 fontSize: 10

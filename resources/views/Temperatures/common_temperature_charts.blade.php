@@ -3,7 +3,7 @@
 /*global $ */
 /*jslint browser */
 
-var baseGraphOptions = {
+var baseGraphOptions = $.extend(true, {}, lineOptionsTemplate, {
     scales: {
         yAxes: [{
             ticks: {
@@ -16,20 +16,17 @@ var baseGraphOptions = {
                 stepSize: 2
             },
             scaleLabel: {
-                display: true,
                 labelString: "{{ Lang::get('bioreactor.temperature_axis_full') }}",
-                fontSize: 14
             }
         }],
         xAxes: [{
             scaleLabel: {
-                display: true,
                 labelString: "{{ Lang::get('bioreactor.time_before_end') }}{{ $end_datetime }}{{ Lang::get('bioreactor.after_end_time') }}",
-                fontSize: 14
             }
         }]
     }
-};
+});
+// alert("base: "+JSON.stringify(baseGraphOptions));
 
 var small_tempOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
