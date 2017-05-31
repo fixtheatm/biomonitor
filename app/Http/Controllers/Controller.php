@@ -78,8 +78,8 @@ class Controller extends BaseController
   }
 
   /**
-   * Read the Temperature records from the table for a specific deviceid
-   * parameter. The records are summarized by the hour
+   * Read the temperature measurement records from the table for a specific
+   * deviceid parameter. The records are summarized by the hour
    *
    * @param string $id The deviceid ex. '00002'
    * @param Carbon $start_time date and time to read records after
@@ -87,9 +87,8 @@ class Controller extends BaseController
    *
    * @return null
    */
-  protected function _getHourlySummaryTemperatureData($deviceid,$start_time,$last_time)
+  protected function _getHourlySummaryTemperatureData( $deviceid, $start_time, $last_time )
   {
-
     // using raw call to the DB. I can't see how to do it using Eloquent
     // so going back to basics.
     // truncates all the recorded_on details down to just the hour.
@@ -104,8 +103,6 @@ class Controller extends BaseController
       ->where('recorded_on', '>', $start_time->toDateTimeString() )
       ->get();
 
-    //var_dump( $r);
-
     // make a 24 element array to hold the x data points
     // The results of the above table get() may be missing data so it
     // may not return 24 results. we need to put zero in first
@@ -113,8 +110,6 @@ class Controller extends BaseController
     $hr_time = new Carbon($last_time);
     $hr_time->minute=0;
     $hr_time->second=0;
-
-    //dd($hr_time);
 
     // the all_day array is an array of arrays. this is the format that we can use
     // to backfill the results into the eloquent format using the hydrate call
@@ -137,26 +132,21 @@ class Controller extends BaseController
       $trec->second=0;
       $index = $hr_time->diffInHours($trec);
 
-      //echo "[".$i."]["."[".$index."][".$r[$i]->temperature."]<br>";
-
       $all_day[$index]['temperature'] =
         sprintf("%02.1f",$r[$i]->temperature);
     }
-    //var_dump($all_day);
-
 
     // the hydrate function will put our constructed array into the
     // Collection format that we need
     $this->temperatures = Temperature::hydrate($all_day);
-
     //dd($this->temperatures);
   }
 
   /**
-   * Read the Temperature records from the table for a specific deviceid
-   * parameter. The records are stored in the class as well as being
-   * returned. The records are loaded in descending order by dateTime
-   * In other words the most recent first.
+   * Read the temperature measurement records from the table for a specific deviceid
+   * parameter. The records are stored in the class, loaded in descending order
+   * by dateTime.  In other words the most recent first.
+   * The date the most recent record was recorded is returned.
    *
    * @param string $id The deviceid ex. '00002'
    * @param int $data_size = 3  Number of hours of data (3 or 24)
@@ -165,18 +155,15 @@ class Controller extends BaseController
    *
    * @return Carbon datetime of last record
    */
-  public function getTemperatureData($id, $data_size=3)
+  public function getTemperatureData( $id, $data_size=3 )
   {
-
-    // correct id from uri if in the wrong format (or missing)!!
-    $deviceid = Bioreactor::formatDeviceid($id);
-
+    $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
 
     // get the last data entry record. Use the record_on time
     // and go backwards from that time to retrieve records
     try {
-      $most_recent_temp = Temperature::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
-      if ( is_null($most_recent_temp)) {
+      $most_recent_measurement = Temperature::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
+      if ( is_null($most_recent_measurement)) {
         App::abort(404);
       }
     }
@@ -184,26 +171,20 @@ class Controller extends BaseController
       $start_time = Carbon::now();
       return $start_time;
     }
-
-    //dd($most_recent_temp);
-
-    $last_time = new Carbon($most_recent_temp->recorded_on);
+    $last_time = new Carbon($most_recent_measurement->recorded_on);
 
     // subtract # of hours. We need to use a new Carbon or it will
     // just point at the old one anyways!
     $start_time = new Carbon($last_time);
     $start_time->subHours($data_size);
-    //dd($last_time->toDateTimeString());
 
-
-    // load the temperature data for this site
+    // load the measurement data for this site
     try {
       if ($data_size==24) {
         $this->_getHourlySummaryTemperatureData($deviceid,$start_time,$last_time);
       }
       else {
         $this->temperatures = Temperature::where('deviceid', '=', $deviceid)->where('recorded_on', '>', $start_time->toDateTimeString() )->orderBy('recorded_on', 'desc')->get();
-        //$this->temperatures = Temperature::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->take($data_size)->get();
       }
     }
     catch (\Exception $e) {
@@ -213,7 +194,6 @@ class Controller extends BaseController
     }
 
     //dd($this->temperatures);
-
     return $last_time;
   }
 
@@ -233,7 +213,7 @@ class Controller extends BaseController
   {
     // put the data in the correct form for the charts JS library
     // generate an x and y array
-    // x holds labels as mm:ss format
+    // x holds time labels in hh:mm format
     // y holds temperatures as nn.nn format
 
     $this->x_temperatures = [];
@@ -283,8 +263,8 @@ class Controller extends BaseController
   }
 
   /**
-   * Read the Lightreading records from the table for a specific deviceid
-   * parameter. The records are summarized by the hour
+   * Read the light intensity measurement records from the table for a specific
+   * deviceid parameter. The records are summarized by the hour
    *
    * @param string $id The deviceid ex. '00002'
    * @param Carbon $start_time date and time to read records after
@@ -292,7 +272,7 @@ class Controller extends BaseController
    *
    * @return null
    */
-  protected function _getHourlySummaryLightreadingData($deviceid,$start_time,$last_time)
+  protected function _getHourlySummaryLightreadingData( $deviceid, $start_time, $last_time )
   {
     // using raw call to the DB. I can't see how to do it using Eloquent
     // so going back to basics.
@@ -308,8 +288,6 @@ class Controller extends BaseController
       ->where('recorded_on', '>', $start_time->toDateTimeString() )
       ->get();
 
-    //dd($r);
-
     // make a 24 element array to hold the x data points
     // The results of the above table get may be missing data so it
     // may not return 24 results. we need to put zero in first
@@ -317,8 +295,6 @@ class Controller extends BaseController
     $hr_time = new Carbon($last_time);
     $hr_time->minute=0;
     $hr_time->second=0;
-
-    //dd($hr_time);
 
     // the all_day array is an array of arrays. this is the format that we can use
     // to backfill the results into the eloquent format using the hydrate call
@@ -341,27 +317,22 @@ class Controller extends BaseController
       $trec->second=0;
       $index = $hr_time->diffInHours($trec);
 
-      //echo "[".$i."]["."[".$index."][".$r[$i]->lux."]<br>";
-
       $all_day[$index]['lux'] =
         sprintf("%6.1f",$r[$i]->lux);
     }
-    //dd($all_day);
-
 
     // the hydrate function will put our constructed array into the
     // Collection format that we need
     $this->lightreadings = Lightreading::hydrate($all_day);
-
     //dd($this->lightreadings);
   }
 
 
   /**
-   * Read the Lightreading records from the table for a specific deviceid
-   * parameter. The records are stored in the class as well as being
-   * returned. The records are loaded in descending order by dateTime
-   * In other words the most recent first.
+   * Read the Light intensity records from the table for a specific deviceid
+   * parameter. The records are stored in the class, loaded in descending order
+   * by dateTime.  In other words the most recent first.
+   * The date the most recent record was recorded is returned.
    *
    * @param string $id The deviceid ex. '00002'
    * @param int $data_size = 3  Number of hours of data (3 or 24)
@@ -370,17 +341,15 @@ class Controller extends BaseController
    *
    * @return Carbon datetime of last record
    */
-  public function getLightreadingData($id, $data_size=3)
+  public function getLightreadingData( $id, $data_size=3 )
   {
-
-    // correct id from uri if in the wrong format (or missing)!!
-    $deviceid = Bioreactor::formatDeviceid($id);
+    $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
 
     // get the last data entry record. Use the record_on time
     // and go backwards from that time to retrieve records
     try {
-      $most_recent_lightreading = Lightreading::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
-      if ( is_null($most_recent_lightreading)) {
+      $most_recent_measurement = Lightreading::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
+      if ( is_null($most_recent_measurement)) {
         App::abort(404);
       }
     }
@@ -388,16 +357,14 @@ class Controller extends BaseController
       $start_time = Carbon::now();
       return $start_time;
     }
-    $last_time = new Carbon($most_recent_lightreading->recorded_on);
+    $last_time = new Carbon($most_recent_measurement->recorded_on);
 
     // subtract # of hours. We need to use a new Carbon or it will
     // just point at the old one anyways!
     $start_time = new Carbon($last_time);
     $start_time->subHours($data_size);
 
-    //dd($last_time->toDateTimeString());
-
-    // load the data for this site
+    // load the measurement data for this site
     try {
       if ( $data_size==24 ) {
         $this->_getHourlySummaryLightreadingData($deviceid,$start_time,$last_time);
@@ -413,7 +380,6 @@ class Controller extends BaseController
     }
 
     //dd($this->lightreadings);
-
     return $last_time;
   }
 
@@ -433,7 +399,7 @@ class Controller extends BaseController
 
     // put the data in the correct form for the charts JS library
     // generate an x and y array
-    // x holds labels as mm:ss format
+    // x holds time labels in hh:mm format
     // y holds y_lightreadings as nnnnn.n format
 
     $this->x_lightreadings = [];
@@ -481,8 +447,8 @@ class Controller extends BaseController
   }
 
   /**
-   * Read the Gasflow records from the table for a specific deviceid
-   * parameter. The records are summarized by the hour
+   * Read the gas flow measurement records from the table for a specific
+   *deviceid parameter. The records are summarized by the hour
    *
    * @param string $id The deviceid ex. '00002'
    * @param Carbon $start_time date and time to read records after
@@ -490,7 +456,7 @@ class Controller extends BaseController
    *
    * @return null
    */
-  protected function _getHourlySummaryGasflowData($deviceid,$start_time,$last_time)
+  protected function _getHourlySummaryGasflowData( $deviceid, $start_time, $last_time)
   {
     // using raw call to the DB. I can't see how to do it using Eloquent
     // so going back to basics.
@@ -506,8 +472,6 @@ class Controller extends BaseController
       ->where('recorded_on', '>', $start_time->toDateTimeString() )
       ->get();
 
-    //dd($r);
-
     // make a 24 element array to hold the x data points
     // The results of the above table get may be missing data so it
     // may not return 24 results. we need to put zero in first
@@ -515,8 +479,6 @@ class Controller extends BaseController
     $hr_time = new Carbon($last_time);
     $hr_time->minute=0;
     $hr_time->second=0;
-
-    //dd($hr_time);
 
     // the all_day array is an array of arrays. this is the format that we can use
     // to backfill the results into the eloquent format using the hydrate call
@@ -539,27 +501,22 @@ class Controller extends BaseController
       $trec->second=0;
       $index = $hr_time->diffInHours($trec);
 
-      //echo "[".$i."]["."[".$index."][".$r[$i]->flow."]<br>";
-
       $all_day[$index]['flow'] =
         sprintf("%5.2f",$r[$i]->flow);
     }
-    //dd($all_day);
-
 
     // the hydrate function will put our constructed array into the
     // Collection format that we need
     $this->gasflows = Gasflow::hydrate($all_day);
-
     //dd($this->gasflows);
   }
 
 
   /**
-   * Read the Gasflow records from the table for a specific deviceid
-   * parameter. The records are stored in the class as well as being
-   * returned. The records are loaded in descending order by dateTime
-   * In other words the most recent first.
+   * Read the gas flow measurement records from the table for a specific deviceid
+   * parameter. The records are stored in the class, loaded in descending order
+   * by dateTime.  In other words the most recent first.
+   * The date the most recent record was recorded is returned.
    *
    * @param string $id The deviceid ex. '00002'
    * @param int $data_size = 3  Number of hours of data (3 or 24)
@@ -570,15 +527,13 @@ class Controller extends BaseController
    */
   public function getGasflowData( $id, $data_size=3 )
   {
-
-    // correct id from uri if in the wrong format (or missing)!!
-    $deviceid = Bioreactor::formatDeviceid($id);
+    $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
 
     // get the last data entry record. Use the record_on time
     // and go backwards from that time to retrieve records
     try {
-      $most_recent_gasflow = Gasflow::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
-      if ( is_null($most_recent_gasflow)) {
+      $most_recent_measurement = Gasflow::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
+      if ( is_null($most_recent_measurement)) {
         App::abort(404);
       }
     }
@@ -586,16 +541,14 @@ class Controller extends BaseController
       $start_time = Carbon::now();
       return $start_time;
     }
-    $last_time = new Carbon($most_recent_gasflow->recorded_on);
+    $last_time = new Carbon($most_recent_measurement->recorded_on);
 
     // subtract # of hours. We need to use a new Carbon or it will
     // just point at the old one anyways!
     $start_time = new Carbon($last_time);
     $start_time->subHours($data_size);
 
-    //dd($last_time->toDateTimeString());
-
-    // load the data for this site
+    // load the measurement data for this site
     try {
       if ( $data_size==24) {
         $this->_getHourlySummaryGasflowData($deviceid,$start_time,$last_time);
@@ -611,7 +564,6 @@ class Controller extends BaseController
     }
 
     //dd($this->gasflows);
-
     return $last_time;
   }
 
@@ -681,7 +633,7 @@ class Controller extends BaseController
   }
 
   /**
-   * Read the Phreading records from the table for a specific deviceid
+   * Read the pH measurement records from the table for a specific deviceid
    * parameter. The records are summarized by the hour
    *
    * @param string $id The deviceid ex. '00002'
@@ -690,7 +642,7 @@ class Controller extends BaseController
    *
    * @return null
    */
-  protected function _getHourlySummaryPhreadingData($deviceid,$start_time,$last_time)
+  protected function _getHourlySummaryPhreadingData( $deviceid, $start_time, $last_time )
   {
     // using raw call to the DB. I can't see how to do it using Eloquent
     // so going back to basics.
@@ -718,7 +670,7 @@ class Controller extends BaseController
     // to backfill the results into the eloquent format using the hydrate call
     for ( $i=0; $i < 24; $i++) {
       // for each hour, make an array holding the results
-      $row = ['deviceid'=>$deviceid, 'hrs'=> 0, 'ph'=>'0.0', 'recorded_on'=>$hr_time->toDateTimeString()];
+      $row = ['deviceid'=>$deviceid, 'hrs'=> 0, 'ph'=>'7.0', 'recorded_on'=>$hr_time->toDateTimeString()];
       $all_day[$i] = $row;
       $hr_time->subhours(1);
     }
@@ -742,14 +694,15 @@ class Controller extends BaseController
     // the hydrate function will put our constructed array into the
     // Collection format that we need
     $this->phreadings = Phreading::hydrate($all_day);
+    //dd($this->phreadings);
   }
 
 
   /**
-   * Read the Phreading records from the table for a specific deviceid
-   * parameter. The records are stored in the class as well as being
-   * returned. The records are loaded in descending order by dateTime
-   * In other words the most recent first.
+   * Read the pH measurement records from the table for a specific deviceid
+   * parameter. The records are stored in the class, loaded in descending order
+   * by dateTime.  In other words the most recent first.
+   * The date the most recent record was recorded is returned.
    *
    * @param string $id The deviceid ex. '00002'
    * @param int $data_size = 3  Number of hours of data (3 or 24)
@@ -758,17 +711,15 @@ class Controller extends BaseController
    *
    * @return Carbon datetime of last record
    */
-  public function getPhreadingData($id, $data_size=3)
+  public function getPhreadingData( $id, $data_size=3 )
   {
-
-    // correct id from uri if in the wrong format (or missing)!!
-    $deviceid = Bioreactor::formatDeviceid($id);
+    $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
 
     // get the last data entry record. Use the record_on time
     // and go backwards from that time to retrieve records
     try {
-      $most_recent_phreading = Phreading::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
-      if ( is_null($most_recent_phreading)) {
+      $most_recent_measurement = Phreading::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
+      if ( is_null($most_recent_measurement)) {
         App::abort(404);
       }
     }
@@ -776,14 +727,14 @@ class Controller extends BaseController
       $start_time = Carbon::now();
       return $start_time;
     }
-    $last_time = new Carbon($most_recent_phreading->recorded_on);
+    $last_time = new Carbon($most_recent_measurement->recorded_on);
 
     // subtract # of hours. We need to use a new Carbon or it will
     // just point at the old one anyways!
     $start_time = new Carbon($last_time);
     $start_time->subHours($data_size);
 
-    // load the data for this bioreactor (device) site
+    // load the measurement data for this site
     try {
       if ( $data_size==24 ) {
         $this->_getHourlySummaryPhreadingData($deviceid,$start_time,$last_time);
@@ -798,6 +749,7 @@ class Controller extends BaseController
       //return Redirect::to('error')->with('message', $message);
     }
 
+    //dd($this->phreadings);
     return $last_time;
   }
 
@@ -817,7 +769,7 @@ class Controller extends BaseController
 
     // put the data in the correct form for the charts JS library
     // generate an x and y array
-    // x holds labels as mm:ss format
+    // x holds time labels in hh:mm format
     // y holds y_phreadings as nnnnnn.n format
 
     $this->x_phreadings = [];
