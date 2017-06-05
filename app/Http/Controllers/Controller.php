@@ -16,6 +16,7 @@ use App\Gasflow;
 use App\Phreading;
 
 use Carbon\Carbon;
+// use AppNamespaceDetectorTrait;
 
 use DB;
 
@@ -45,6 +46,52 @@ class Controller extends BaseController
   protected $phreadings;
   protected $x_phreadings=array();
   protected $y_phreadings=array();
+
+  // type: reference string used to identify the [code for] sensor
+  // prop: propery used to hold measurement data loaded from database
+  // name: abbreviated sensor type
+  // route: «?temporary?» router for the full graph view
+  // view: The view (folder) for sensor specific [partial] blades
+  // data_field: database field name holding measurment ValidatesRequests
+  // measure_fmt: sprintf format used to create graph data points
+  protected $sensors = [
+    'gasflows'       => [
+      'type'        => 'gasflow',
+      'prop'        => 'gasflows',
+      'name'        => 'flow',
+      'view'        => 'GasFlows',
+      'data_field'  => 'flow',
+      'model'       => 'Gasflow',
+      'measure_fmt' => "%5.2f",
+    ],
+    'lightreadings' => [
+      'type'        => 'lightreading',
+      'prop'        => 'lightreadings',
+      'name'        => 'light',
+      'view'        => 'LightReadings',
+      'data_field'  => 'lux',
+      'model'       => 'Lightreading',
+      'measure_fmt' => "%6.1f",
+    ],
+    'phreadings' => [
+      'type'        => 'phreading',
+      'prop'        => 'phreadings',
+      'name'        => 'ph',
+      'view'        => 'PhReadings',
+      'data_field'  => 'lux',
+      'model'       => 'Phreading',
+      'measure_fmt' => "%6.1f",
+    ],
+    'temperatures'   => [
+      'type'        => 'temperature',
+      'prop'        => 'temperatures',
+      'name'        => 'temp',
+      'view'        => 'Temperatures',
+      'data_field'  => 'temperature',
+      'model'       => 'Temperature',
+      'measure_fmt' => "%02.2f",
+    ],
+  ];
 
   /**
    * Read the Bioreactor record from the table based on the deviceid
@@ -199,6 +246,69 @@ class Controller extends BaseController
 
 
   /**
+   * Read the sensor measurement records from the table for a specific deviceid
+   * parameter. The records are stored in the class, loaded in descending order
+   * by dateTime.  In other words the most recent first.
+   * The date the most recent record was recorded is returned.
+   *
+   * @param string $sensor Key to $sensor table of (sensor specific) properties
+   * @param string $id The deviceid ex. '00002'
+   * @param int $data_size = 3  Number of hours of data (3 or 24)
+   *
+   * @throws Exception if SQL select fails (no records is ok though)
+   *
+   * @return Carbon datetime of last record
+   */
+  public function getSensorData( $sensor, $id, $data_size=3 )
+  {
+    $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
+
+    // get the last data entry record. Use the record_on time
+    // and go backwards from that time to retrieve records
+    $sensor_props = $this->sensors[ $sensor ];
+    // $sensor_model =  $sensor_props[ 'model' ];
+    $sensor_model =  'App\\' . $sensor_props[ 'model' ];
+    // https://laracasts.com/discuss/channels/eloquent/access-eloquent-model-dynamically
+    // https://laravel.com/docs/5.2/eloquent Dynamic Scope
+    try {
+      // Temperature::
+      $most_recent_measurement = $sensor_model::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
+      if ( is_null($most_recent_measurement)) {
+        App::abort(404);
+      }
+    }
+    catch (\Exception $e) {
+      $start_time = Carbon::now();
+      return $start_time;
+    }
+    $last_time = new Carbon($most_recent_measurement->recorded_on);
+
+    // subtract # of hours. We need to use a new Carbon or it will
+    // just point at the old one anyways!
+    $start_time = new Carbon($last_time);
+    $start_time->subHours($data_size);
+
+    // load the measurement data for this site
+    try {
+      if ($data_size==24) {
+        $this->_getHourlySummaryTemperatureData($deviceid,$start_time,$last_time);
+      }
+      else {
+        $this->{ $sensor_props[ 'prop' ]} = $sensor_model::where('deviceid', '=', $deviceid)->where('recorded_on', '>', $start_time->toDateTimeString() )->orderBy('recorded_on', 'desc')->get();
+      }
+    }
+    catch (\Exception $e) {
+      $message = Lang::get('export.no_' . $sensor_props[ 'type' ] . '_data_found');
+      dd($message);
+      //return Redirect::to('error')->with('message', $message);
+    }
+
+    //dd($this->{ $sensor_props[ 'prop' ]});
+    return $last_time;
+  }
+
+
+  /**
    * Builds the x and y temperature graph arrays that are passed to the
    * javascript Chart builder. The temperature records must already
    * have been loaded into the temperatures Collection in this class
@@ -261,6 +371,44 @@ class Controller extends BaseController
       'y_data' => $this->y_temperatures
     ];
   }
+
+  /**
+   * Create the x and y data points needed for the javascript chart builder
+   * The measurement records must already have been loaded into the
+   * sensor specific Collection in this class
+   *
+   * @throws Exception if measurements have not been loaded from table yet
+   *
+   * @return Array sensor measurement data points
+   */
+  public function _buildXYMeasurementData( $sensor_name )
+  {
+    $sensor_properties = $this -> sensors[ $sensor_name ];
+    // dd( $sensor_properties );
+    // prop, data_field, measurement_fmt
+    $xy_data = [];
+
+    // if the measurements have not been loaded, or failed (no records)
+    if ( is_null( $this ->{ $sensor_properties[ 'prop' ] })||( count( $this ->{ $sensor_properties[ 'prop' ] }) < 1 ))
+    {
+      // fill something in, otherwise no graph will be generated
+      $xy_data[] = [ 'x' => '0', 'y' => 0 ];
+    } else {
+      // reverse the order to make the graph more human like
+      $rev_records = $this ->{ $sensor_properties[ 'prop' ] } -> reverse();
+      foreach ( $rev_records as $reading ) {
+        $dt = new carbon( $reading->recorded_on );
+        $xy_data[] = [
+          'x' => $dt -> timestamp,
+          'y' => sprintf( $sensor_properties[ 'measure_fmt' ], $reading ->{ $sensor_properties[ 'data_field' ]})
+        ];
+      }
+    }
+
+    // return $this->{ $sensor_properties[ 'xy_prop' ]};
+    return $xy_data;
+  }
+
 
   /**
    * Read the light intensity measurement records from the table for a specific

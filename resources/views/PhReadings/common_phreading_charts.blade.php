@@ -46,4 +46,11 @@ var full_phOptions = $.extend(true, {}, baseGraphOptions, {
     }
 });
 
+// Options for all pH sensor charts, regardless of the graph size
+// TODO get rid of isset test after $sensor_name in every view
+@if ( isset( $sensor_name ))
+{{ $sensor_name }}Options = {
+};
+@endif
+
 </script>

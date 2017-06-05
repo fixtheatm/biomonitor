@@ -3,7 +3,7 @@
 /*global $ */
 /*jslint browser */
 
-var baseGraphOptions = $.extend(true, {}, lineOptionsTemplate, {
+var baseGraphOptions = $.extend( true, {}, lineOptionsTemplate, {
     scales: {
         yAxes: [{
             scaleLabel: {
@@ -53,5 +53,13 @@ var full_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
         text: "{{ Lang::get('bioreactor.chart_gas_title_full') }}"
     }
 });
+
+
+// Options for all gas flow sensor charts, regardless of the graph size
+// TODO get rid of isset test after $sensor_name in every view
+@if ( isset( $sensor_name ))
+{{ $sensor_name }}Options = {
+};
+@endif
 
 </script>

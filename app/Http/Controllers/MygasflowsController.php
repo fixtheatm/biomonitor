@@ -23,44 +23,4 @@ class MygasflowsController extends Controller
   {
     $this->middleware( 'auth' );
   }
-
-  /**
-   * Show the users recent gas production flows
-   *
-   * @param int $hrs default 3. number of hours of data to view. (only 3 or 24 right now)
-   */
-  public function index( $hrs=3 )
-  {
-    // the deviceid should not be blank or bogus as
-    // it is from the user record enforced with a foreign key constraint
-    $id = Auth::user()->deviceid;
-
-    // load the user´s bioreactor record from the table
-    $bioreactor = $this->getBioreactorFromId( $id );
-
-    // load $this->gasflows data for this bioreactor (device) site
-    // returns recorded_on date of last (most recent) record
-    $end_datetime = $this->getGasflowData( $id, $hrs );
-    if ( is_null( $this->gasflows )) {
-      $this->gasflows = array();
-    }
-
-    // get the x and y data points to be graphed
-    $chart_data = $this->_buildXYGasflowData();
-
-    // pass the formatted data to the view
-    return view( 'MyBio.sensor_graph', [
-      'route'           => 'mygasflows',
-      'sensor_name'     => 'gasflow',
-      'value_field'     => 'flow',
-      'value_label'     => Lang::get('bioreactor.flow_head'),
-      'id'              => $id,
-      'bioreactor'      => $bioreactor,
-      'end_datetime'    => $end_datetime->toDateTimeString(),
-      'x_data'          => $chart_data['x_data'],
-      'y_data'          => $chart_data['y_data'],
-      'dbdata'          => $this->gasflows
-    ]);
-  }
-
 }

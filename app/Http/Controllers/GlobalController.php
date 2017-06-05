@@ -52,6 +52,7 @@ class GlobalController extends Controller
 
     return view( 'Global.index', [
       'route'      => 'global',
+      'header_title' => 'All Bioreactors',
       'dbdata'     => $bioreactors
     ]);
   }
@@ -121,6 +122,7 @@ class GlobalController extends Controller
     // pass data into the view
     return view( 'Global.show', [
       'route'               => 'single',
+      'header_title'        => 'Bioreactor #' . $id,
       'id'                  => $id,
       'bioreactor'          => $bioreactor,
       'sensors'             => $sensor_ref,

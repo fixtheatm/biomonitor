@@ -15,6 +15,10 @@ body {
   width: 80px;
 }
 
+#data_graph,
+#data_list {
+  padding-top: 3px;
+}
 #global_list {
   padding-bottom: 3px;
 }

@@ -2,7 +2,6 @@
 
 @section('content')
 
-<div class="panel panel-success">
 <div class="panel panel-primary">
 
   @include('common_detail_header', array('show_map' => false))
@@ -15,13 +14,9 @@
 
     <div class="tab-content">
       <div id="data_graph" class="tab-pane fade in active">
-        <div style="height:3px"></div>
-        <div>
-           <canvas id="chart_canvas"></canvas>
-        </div>
+         <canvas id="chart_canvas"></canvas>
       </div>
       <div id="data_list" class="tab-pane fade">
-        <div style="height:3px"></div>
         <div class="table table-condensed table-responsive">
           <table class="table table-fixed">
             <thead>
@@ -45,43 +40,49 @@
     </div>
   </div>
 </div>
-</div>
 
 @stop
 
 
 @section('footer_js')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+<!--
+route ¦{{ $route }}¦
+sensor_name ¦{{ $sensor_name }}¦
+value_field ¦{{ $value_field }}¦
+value_label ¦{{ $value_label }}¦
+id ¦{{ $id }}¦
+bioreactor name ¦{{ $bioreactor['name'] }}¦
+end_datetime ¦{{ $end_datetime }}¦
+point_count ¦{{ $point_count }}¦
+interval_count ¦{{ $interval_count }}¦
+point count xy {{ count( $xy_data ) }}
+dbdata count {{ count( $dbdata ) }} -->
 
 @include('common_line_chart')
 
-@include('GasFlows.common_gasflow_charts')
-@include('LightReadings.common_lightreading_charts')
-@include('Temperatures.common_temperature_charts')
-@include('PhReadings.common_phreading_charts')
+<!-- get the pieces to use for the current sensor type -->
+<!--
+  sensor_view ¦{{ $sensor_view }}¦
+  sensor_type ¦{{ $sensor_type }}¦
+  @@include('{{ $sensor_view }}.common_{{ $sensor_type }}_charts') -->
+@include($sensor_view . '.common_' . $sensor_type . '_charts')
 
 <script>
-// Get the actual sensor values
-// route {{ $route }}
-// point count {{ count( $y_data ) }}
-var sensorValues = [@foreach ($y_data as $pt)"{{ $pt }}",@endforeach];
 
-var sensorDataSet = [ $.extend({}, lineChartTemplate, {
-    data: sensorValues,
-    pointRadius: {{ count($y_data) > 120 ? 1 : 5 }},
-    pointHoverRadius: {{ count($y_data) > 120 ? 2 : 12 }},
-    pointHoverBorderWidth:  {{ count($y_data) > 120 ? 1 : 2 }},
+var sensorDataSet = [ $.extend( true, {}, baseDataset, fullDataset, {
+  data: graphPoints,
 })];
-var sensorChartData = {
-    labels: [@foreach ($x_data as $pt)"{{ $pt }}",@endforeach],
-    datasets: sensorDataSet
-};
-// alert ("full gas flow:"+JSON.stringify(full_{{ $sensor_name }}Options));
+// full_{{ $sensor_name }}Options
+var graphOptions = $.extend( true, {}, baseOptions, fullOptions, {{ $sensor_name }}Options);
+
 var ctx = document.getElementById("chart_canvas").getContext("2d");
 var sensorGraph = new Chart( ctx, {
-    type: "line",
-    data: sensorChartData,
-    options: full_{{ $sensor_name }}Options
+    type: 'scatter',
+    data: {
+        datasets: sensorDataSet
+    },
+    options: graphOptions
 });
 
 </script>

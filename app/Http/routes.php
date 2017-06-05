@@ -47,14 +47,15 @@ Route::group(['middleware' => 'web'], function () {
   Route::get('/single/{id}',              'GlobalController@show' );
   Route::get('/getjson',                  'GlobalController@getjson' );
   Route::get('/mybio',                    'MybioController@index' );
-  Route::get('/mytemperatures/{hrs}',     'MytemperaturesController@index' );
-  Route::get('/mytemperatures',           'MytemperaturesController@index' );
-  Route::get('/mylightreadings/{hrs}',    'MylightreadingsController@index' );
-  Route::get('/mylightreadings',          'MylightreadingsController@index' );
-  Route::get('/mygasflows/{hrs}',         'MygasflowsController@index' );
-  Route::get('/mygasflows',               'MygasflowsController@index' );
-  Route::get('/myphreadings/{hrs}',       'MyphreadingsController@index' );
-  Route::get('/myphreadings',             'MyphreadingsController@index' );
+  Route::get('/mytemperatures/{hrs}',     'MybioController@graph' );
+  Route::get('/mytemperatures',           'MybioController@graph' );
+  Route::get('/mylightreadings/{hrs}',    'MybioController@graph' );
+  Route::get('/mylightreadings',          'MybioController@graph' );
+  Route::get('/mygasflows/{hrs}',         'MybioController@graph' );
+  Route::get('/mygasflows',               'MybioController@graph' );
+  Route::get('/myphreadings/{hrs}',       'MybioController@graph' );
+  Route::get('/myphreadings',             'MybioController@graph' );
+  Route::get('/mytemperatures/{hrs}/{$end}',    'MybioController@graph' );
 
   Route::get('/password',                 'PasswordController@show' );
   Route::post('/password',                'PasswordController@update' );

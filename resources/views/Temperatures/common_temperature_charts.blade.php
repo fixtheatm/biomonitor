@@ -3,7 +3,7 @@
 /*global $ */
 /*jslint browser */
 
-var baseGraphOptions = $.extend(true, {}, lineOptionsTemplate, {
+var baseGraphOptions = $.extend( true, {}, lineOptionsTemplate, {
     scales: {
         yAxes: [{
             ticks: {
@@ -16,7 +16,7 @@ var baseGraphOptions = $.extend(true, {}, lineOptionsTemplate, {
                 stepSize: 2
             },
             scaleLabel: {
-                labelString: "{{ Lang::get('bioreactor.temperature_axis_full') }}",
+                labelString: "{{ Lang::get('bioreactor.temp_axis_full') }}",
             }
         }],
         xAxes: [{
@@ -32,7 +32,7 @@ var small_tempOptions = $.extend(true, {}, baseGraphOptions, {
     scales: {
         yAxes: [{
             scaleLabel: {
-                labelString: "{{ Lang::get('bioreactor.temperature_axis_small') }}",
+                labelString: "{{ Lang::get('bioreactor.temp_axis_small') }}",
                 fontSize: 12
             }
         }],
@@ -63,5 +63,27 @@ var full_tempOptions = $.extend(true, {}, baseGraphOptions, {
         text: "{{ Lang::get('bioreactor.chart_temp_title_full') }}"
     }
 });
+
+// Options for all temperature sensor charts, regardless of the graph size
+// TODO Add logic to stepSize, to increase for the small charts
+// merge alternate stepSize in the ?manuall? for small charts
+// TODO get rid of isset test after $sensor_name in every view
+@if ( isset( $sensor_name ))
+{{ $sensor_name }}Options = {
+    scales: {
+        yAxes: [{
+            ticks: {
+                callback: function (label, index, labels) {
+                    "use strict";
+                    return label + "°";
+                },
+                suggestedMin: 20.0,
+                suggestedMax: 22.0,
+                stepSize: 1.0,
+            },
+        }],
+    },
+};
+@endif
 
 </script>
