@@ -57,6 +57,9 @@ var full_gasflowOptions = $.extend(true, {}, baseGraphOptions, {
 
 // Options for all gas flow sensor charts, regardless of the graph size
 // TODO get rid of isset test after $sensor_name in every view
+{{ $sensor_name }}Dataset = {
+    steppedLine: true
+};
 @if ( isset( $sensor_name ))
 {{ $sensor_name }}Options = {
 };

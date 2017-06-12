@@ -94,14 +94,14 @@ var baseDataset = {
     fill: false,
     lineTension: 0,
     spanGaps: false,
-    borderColor: "rgba(1,246,6,1)",
+    borderColor: "rgba(14,17,176,1)",
     pointBackgroundColor: "rgba(1,246,6,1)",
     pointHoverBackgroundColor: "rgba(75,192,192,1)",
     pointHoverBorderColor: "rgba(220,0,0,1)"
 };
 @if ( isset( $date_constants ))
 var fullDataset = {
-    pointRadius: {{ $point_count > 120 ? 1 : 5 }},
+    pointRadius: {{ $point_count > 120 ? 1 : 3 }},
     pointHoverRadius: {{ $point_count > 120 ? 2 : 12 }},
     pointHoverBorderWidth:  {{ $point_count > 120 ? 1 : 2 }},
     label: "{{ Lang::get('bioreactor.end_time_prefix') }}" + fmtEndingDate("{{ $end_datetime }}") + "{{ Lang::get('bioreactor.end_time_suffix') }}"
@@ -174,7 +174,7 @@ var fullOptions = {
         callbacks: {
             label: function (tooltipItem, data) {
                 "use strict";
-                return tooltipItem.yLabel + "° @" + fmtTooltipDate(tooltipItem.xLabel);
+                return tooltipItem.yLabel + " @" + fmtTooltipDate(tooltipItem.xLabel);
             }
         }
     },
@@ -182,6 +182,9 @@ var fullOptions = {
         text: "{{ Lang::get('bioreactor.chart_' . $sensor_name . '_title_full') }}"
     }
 };
+// TODO add sensor specific units to tooltip callback: $sensor_units ?? (which could be null)
+// Lang::get ?? are units language specific here?  international units?
+// IDEA for refactoring careful of difference between page and chart specific content
 @endif
 
 // TODO find and get rid of references to lineOptionsTemplate and baseGraphOptions

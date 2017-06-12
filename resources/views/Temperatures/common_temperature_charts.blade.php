@@ -69,6 +69,8 @@ var full_tempOptions = $.extend(true, {}, baseGraphOptions, {
 // merge alternate stepSize in the ?manuall? for small charts
 // TODO get rid of isset test after $sensor_name in every view
 @if ( isset( $sensor_name ))
+{{ $sensor_name }}Dataset = {
+};
 {{ $sensor_name }}Options = {
     scales: {
         yAxes: [{

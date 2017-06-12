@@ -115,7 +115,7 @@ class MybioController extends Controller
    * @param int $hrs default 3. number of hours of data to view.
    * @param int $end default now. the most recent (recorded_on) measurement to show
    */
-  public function graph( $hrs=3, $end=0 )
+  public function graph( $hrs=3, $end='now' )
   {
     $common_data = $this->collect_common();
 
@@ -137,7 +137,7 @@ class MybioController extends Controller
     // load to store as rate? (convert fixed volumn and time interval to rate)
 
     // get the x and y data points to be graphed
-    $chart_data = $this->_buildXYMeasurementData( $mySensor );
+    $chart_data = $this->_buildXYMeasurementData( $mySensor, $hrs );
     // dd($chart_data);
 
     // pass the formatted data to the view

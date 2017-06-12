@@ -70,11 +70,10 @@ dbdata count {{ count( $dbdata ) }} -->
 
 <script>
 
-var sensorDataSet = [ $.extend( true, {}, baseDataset, fullDataset, {
-  data: graphPoints,
+var sensorDataSet = [ $.extend( true, {}, baseDataset, fullDataset, {{ $sensor_name }}Dataset, {
+    data: graphPoints,
 })];
-// full_{{ $sensor_name }}Options
-var graphOptions = $.extend( true, {}, baseOptions, fullOptions, {{ $sensor_name }}Options);
+var graphOptions = $.extend( true, {}, baseOptions, fullOptions, {{ $sensor_name }}Options );
 
 var ctx = document.getElementById("chart_canvas").getContext("2d");
 var sensorGraph = new Chart( ctx, {

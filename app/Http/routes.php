@@ -55,7 +55,7 @@ Route::group(['middleware' => 'web'], function () {
   Route::get('/mygasflows',               'MybioController@graph' );
   Route::get('/myphreadings/{hrs}',       'MybioController@graph' );
   Route::get('/myphreadings',             'MybioController@graph' );
-  Route::get('/mytemperatures/{hrs}/{$end}',    'MybioController@graph' );
+  Route::get('/mytemperatures/{hrs}/{end}',    'MybioController@graph' );
 
   Route::get('/password',                 'PasswordController@show' );
   Route::post('/password',                'PasswordController@update' );
