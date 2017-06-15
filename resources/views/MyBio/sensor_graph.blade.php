@@ -26,10 +26,9 @@
               </tr>
             </thead>
             <tbody>
-<!-- { { $measurement }} -->
 @foreach ($dbdata as $measurement)
               <tr>
-                <td class="col-xs-8">{{ $measurement->recorded_on }}</td>
+                <td class="col-xs-8">{{ $measurement->recorded_on }} UTC</td>
                 <td class="col-xs-4">{{ $measurement[$value_field] }}</td>
               </tr>
 @endforeach
@@ -48,42 +47,42 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 <!--
 route ¦{{ $route }}¦
-sensor_name ¦{{ $sensor_name }}¦
 value_field ¦{{ $value_field }}¦
 value_label ¦{{ $value_label }}¦
 id ¦{{ $id }}¦
 bioreactor name ¦{{ $bioreactor['name'] }}¦
-end_datetime ¦{{ $end_datetime }}¦
-point_count ¦{{ $point_count }}¦
 interval_count ¦{{ $interval_count }}¦
-point count xy {{ count( $xy_data ) }}
+@foreach ($sensors as $sensor_name => $sensor)
+sensor name ¦{{ $sensor_name }}¦
+end_datetime ¦{{ $sensor['end_datetime'] }}¦
+point_count ¦{{ $sensor['point_count'] }}¦
+point count xy ¦{{ count( $sensor['xy_data'] ) }}¦
+@endforeach
 dbdata count {{ count( $dbdata ) }} -->
 
+{{-- only a single entry, but easy way to get the sensor name key --}}
+@foreach ($sensors as $sensor_name => $sensor)
 @include('common_line_chart')
 
 <!-- get the pieces to use for the current sensor type -->
-<!--
-  sensor_view ¦{{ $sensor_view }}¦
-  sensor_type ¦{{ $sensor_type }}¦
-  @@include('{{ $sensor_view }}.common_{{ $sensor_type }}_charts') -->
-@include($sensor_view . '.common_' . $sensor_type . '_charts')
+@include('MyBio.common_' . $sensor_name . '_charts')
+@endforeach
 
 <script>
+/*global $*/
+/*jslint browser, devel */
 
-var sensorDataSet = [ $.extend( true, {}, baseDataset, fullDataset, {{ $sensor_name }}Dataset, {
-    data: graphPoints,
-})];
-var graphOptions = $.extend( true, {}, baseOptions, fullOptions, {{ $sensor_name }}Options );
+(function () {
+    "use strict";
+    var base = document.com.solarbiocells.biomonitor;
+    var bin = base.bin;
 
-var ctx = document.getElementById("chart_canvas").getContext("2d");
-var sensorGraph = new Chart( ctx, {
-    type: 'scatter',
-    data: {
-        datasets: sensorDataSet
-    },
-    options: graphOptions
-});
-
+    // The raw data points that will be used with whatever chart is being displayed
+@foreach ($sensors as $sensor_name => $sensor)
+    var graphPoints = [@foreach ($sensor['xy_data'] as $pt){x: {{ $pt['x'] }}000, y: {{ $pt['y'] }}}@if ($pt !== end($sensor['xy_data'])), @endif{{-- --}}@endforeach];
+@endforeach
+    bin.populateScatterChart("chart_canvas", "full", "{{ $sensor_name }}", graphPoints);
+}());// anonymous function()
 </script>
 
 @stop

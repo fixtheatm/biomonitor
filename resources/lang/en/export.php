@@ -58,6 +58,42 @@ return [
   'raw_to_spreadsheet_title'  => 'Raw Data Export to Excel',
   'raw_to_spreadsheet_btn'    => 'Raw Data to Excel',
 
+  // oxygen production sensor data export
+
+  'oxygen_filename'           => 'gasproduction',
+  'oxygen_select'             => 'Gas Production Readings',
+  'oxygen_data'               => 'Gas Production Data',
+  'oxygen_description'        => 'Gas Production for Bioreactor',
+  'oxygen_sheet_name'         => 'Oxygen Data',
+  'oxygen_col_title'          => 'mL',
+
+  // light sensor data export
+
+  'light_filename'            => 'lightreadings',
+  'light_select'              => 'Light Readings',
+  'light_data'                => 'Light Reading Data',
+  'light_description'         => 'Light Readings for Bioreactor',
+  'light_sheet_name'          => 'Light Reading Data',
+  'light_col_title'           => 'µmol photons/(m^2 S)',
+
+  // ph sensor data export
+
+  'ph_filename'               => 'phreadings',
+  'ph_select'                 => 'pH Readings',
+  'ph_data'                   => 'pH Reading Data',
+  'ph_description'            => 'pH Readings for Bioreactor',
+  'ph_sheet_name'             => 'pH Reading Data',
+  'ph_col_title'              => 'pH',
+
+  // temperature sensor data export
+
+  'temperature_filename'      => 'temperatures',
+  'temperature_select'        => 'Temperature Readings',
+  'temperature_data'          => 'Temperature Data',
+  'temperature_description'   => 'Temperatures for Bioreactor',
+  'temperature_sheet_name'    => 'Temperature Data',
+  'temperature_col_title'     => 'Degrees Celsius',
+
   // gas flow data export
 
   'gasflows_filename'         => 'gasflows',
@@ -65,7 +101,7 @@ return [
   'gasflows_data'             => 'Gas Flow Data',
   'gasflows_description'      => 'Gas Flow for Bioreactor',
   'gasflows_sheet_name'       => 'Gas Flow Data',
-  'flow_col_title'            => 'Flow (x10)',
+  'flow_col_title'            => 'mL',
 
   // light readings data export
 
@@ -89,10 +125,10 @@ return [
 
   'temperatures_filename'     => 'temperatures',
   'temps_select'              => 'Temperature Readings',
-  'temperature_data'          => 'Temperature Data',
-  'temperature_col_title'     => 'Temperature',
-  'temperature_description'   => 'Temperatures for Bioreactor',
-  'temperature_sheet_name'    => 'Temperature Data',
+  // 'temperature_data'          => 'Temperature Data',
+  // 'temperature_col_title'     => 'Temperature',
+  // 'temperature_description'   => 'Temperatures for Bioreactor',
+  // 'temperature_sheet_name'    => 'Temperature Data',
 
   // users data export
 

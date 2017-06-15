@@ -211,21 +211,24 @@ class ExportController extends Controller
   public function export(Request $request) {
 
     // select which datatype to export
-
+    // $this->exportSensorReading($request->datatype_to_excel);
+    // Ssensor[$request->datatype_to_excel]
     switch($request->datatype_to_excel)  {
-      case '1':
+      case 'oxygen':
         $this->exportGasFlows($request);
         break;
-      case '2':
+      case 'light':
         $this->exportLightReadings($request);
         break;
-      case '3':
+      case 'temperature':
         $this->exportTemperatures($request);
         break;
-      case '4':
+      case 'ph':
         // TODO PhReadings
         // $this->exportPhReadings($request);
         break;
+      default:
+        dd('Unknown export reqest: ' . $request->datatype_to_excel);
     }
 
     return redirect('/home');

@@ -15,14 +15,6 @@ use Carbon\Carbon;
 
 class GlobalController extends Controller
 {
-  /**
-   * Create a new controller instance.
-   *
-   * @return void
-   */
-  public function __construct()
-  {
-  }
 
   /**
    * return all bioreactors as JSON
@@ -55,7 +47,7 @@ class GlobalController extends Controller
       'header_title' => 'All Bioreactors',
       'dbdata'     => $bioreactors
     ]);
-  }
+  }// ./index(…)
 
 
   /**
@@ -72,69 +64,29 @@ class GlobalController extends Controller
     // For each sensor, get the associated data from the database for this
     // location.  Convert the data to the format needed by the Chart.js library.
     // x holds time labels (hh:mm), y holds the data
-
-    // The datetime of the last (most recent) record is returned, or the current
-    // datetime, if no records .
-    $end_datetime = $this->getTemperatureData( $id );
-    $temp_axis_data = $this->_buildXYTemperatureData(); // Degrees Celsius
-
-    $this->getLightreadingData( $id );
-    $light_axis_data = $this->_buildXYLightreadingData(); // intensity as nnnnn.n
-
-    $this->getGasflowData( $id );
-    $gasflow_axis_data = $this->_buildXYGasflowData(); // milliliters/minute
-
-    $this->getPhreadingData( $id );
-    $ph_axis_data = $this->_buildXYPhreadingData(); // pH
-
-    $view_end_time = $end_datetime->toDateTimeString(); // locale specific?
-    $sensor_ref = [
-      'gasflow'         => [
-        'name' => 'gasflow',
-        'title' => Lang::get('bioreactor.gasflow_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $gasflow_axis_data['x_data'],
-        'y_data'    => $gasflow_axis_data['y_data'],
-      ],
-      'light'           => [
-        'name' => 'light',
-        'title' => Lang::get('bioreactor.light_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $light_axis_data['x_data'],
-        'y_data'    => $light_axis_data['y_data'],
-      ],
-      'temperature'     => [
-        'name' => 'temp',
-        'title' => Lang::get('bioreactor.temperature_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $temp_axis_data['x_data'],
-        'y_data'    => $temp_axis_data['y_data'],
-      ],
-      'ph'              => [
-        'name' => 'ph',
-        'title' => Lang::get('bioreactor.ph_title' ),
-        'end_datetime' => $view_end_time,
-        'x_data'    => $ph_axis_data['x_data'],
-        'y_data'    => $ph_axis_data['y_data'],
-      ],
-    ];
+    $chart_data = [];
+    foreach ($this->sensors as $sensor => $props) {
+      // TODO refactor: MyBioController::index«2»
+      $chart_data[$sensor]['end_datetime'] = $this->getSensorData( $sensor, $id )->toDateTimeString();
+      if ( is_null( $this->{ $props[ 'prop' ]} )) {
+        $this->{ $props[ 'prop' ]} = array();
+      }
+      $chart_data[$sensor]['xy_data'] = $this->_buildXYMeasurementData( $sensor );
+      $chart_data[$sensor]['title'] = Lang::get('bioreactor.' . $sensor . '_title' );
+      $chart_data[$sensor]['point_count'] = count( $chart_data[$sensor]['xy_data'] );
+    }
+    // dd( $chart_data );
 
     // pass data into the view
-    return view( 'Global.show', [
-      'route'               => 'single',
-      'header_title'        => 'Bioreactor #' . $id,
+    return view( 'MyBio.mybio', [
       'id'                  => $id,
       'bioreactor'          => $bioreactor,
-      'sensors'             => $sensor_ref,
-      'end_datetime'        => $view_end_time,
-      'x_temperature_data'  => $temp_axis_data['x_data'],
-      'y_temperature_data'  => $temp_axis_data['y_data'],
-      'x_lightreading_data' => $light_axis_data['x_data'],
-      'y_lightreading_data' => $light_axis_data['y_data'],
-      'x_gasflow_data'      => $gasflow_axis_data['x_data'],
-      'y_gasflow_data'      => $gasflow_axis_data['y_data'],
-      'x_phreading_data'    => $ph_axis_data['x_data'],
-      'y_phreading_data'    => $ph_axis_data['y_data'],
+      'date_constants'      => $this->localized_date_names,
+      'header_title'        => 'Bioreactor #' . $id,
+      'sensors'             => $chart_data,
+      'interval_count'  => 3,
+      'show_excel'      => false,
+      'show_button'     => false,
     ]);
-  }
+  }// ./show(…)
 }
