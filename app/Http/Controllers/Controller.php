@@ -67,6 +67,7 @@ class Controller extends BaseController
       'prop'        => 'gasflows',
       'route'       => '/mygasflows',
       'model'       => 'Gasflow',
+      // 'full_model'  => self::MODEL_PREFIX + 'Gasflow', // syntax error with either "." or "+" operator here
       'table'       => 'gasflows',
       'data_field'  => 'flow',
       'summarize'   => 'sum',
@@ -131,6 +132,11 @@ class Controller extends BaseController
         $names[] = Lang::get('messages.month_Mmm_' . $i );
       }
       $this->localized_date_names['month'] = $names;
+
+      foreach ($this->sensors as &$sensor) {
+        $sensor['full_model'] = self::MODEL_PREFIX . $sensor['model'];
+        // $sensor['model'] = self::MODEL_PREFIX . $sensor['model'];
+      }
   }
 
 

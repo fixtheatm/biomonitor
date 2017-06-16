@@ -64,6 +64,7 @@
       </div>
 
       <div class="modal-footer">
+        {{ Form::hidden('timezone_offset', 'tz0') }}
         {!! Form::submit('Go', array('class'=>'btn btn-success btn-sm')) !!}
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
@@ -111,6 +112,13 @@
         });
     });
 @endforeach
+
+    // Fill in user (actually browser) timezone information, to help out with
+    // generic date values.
+    // TODO to do this **properly** need the offset for the actual entered date
+    //  values, since they could be on different sides of a daylight savings change
+    // TODO or even convert to UTC here, so server does not need to consider time zones
+    $("[name='timezone_offset']")[0]["value"] = (new Date()).getTimezoneOffset();
 }());// anonymous function()
 </script>
 

@@ -20,7 +20,11 @@ return [
   'bioreactor_id_col_title'   => 'Bioreactor ID',
   'created_on_col_title'      => 'Created On',
   'last_updated_col_title'    => 'Last Updated',
+  'spreadsheet_subject'       => 'Biomonitor Data Export',
+  'spreadsheet_keywords'      => 'maatwebsite, excel, export, sensor, measurement',
+  'utc_suffix'                => ' UTC',
 
+  // Move the following to ?messages? (not export anyway)
   'you_are_not_an_admin'      => 'Sorry! You are NOT an admin and cannot perform this function',
   'cannot_delete_yourself'    => 'Sorry! You cannot delete yourself. Bad idea and existentially wrong',
 
@@ -43,10 +47,10 @@ return [
   // Controller strings
 
   'invalid_deviceid'          => 'Sorry! Invalid deviceid',
+  'no_oxygen_data_found'      => 'Sorry! No gas production data was found',
+  'no_light_data_found'       => 'Sorry! No light reading data was found',
+  'no_ph_data_found'          => 'Sorry! No pH reading data was found',
   'no_temperature_data_found' => 'Sorry! No temperature data was found',
-  'no_lightreading_data_found'=> 'Sorry! No light reading data was found',
-  'no_gasflow_data_found'     => 'Sorry! No gas flow data was found',
-  'no_phreading_data_found'   => 'Sorry! No pH reading data was found',
 
   // common detail
 
@@ -72,7 +76,7 @@ return [
   'light_filename'            => 'lightreadings',
   'light_select'              => 'Light Readings',
   'light_data'                => 'Light Reading Data',
-  'light_description'         => 'Light Readings for Bioreactor',
+  'light_description'         => 'Light intensity sensor readings for bioreactor',
   'light_sheet_name'          => 'Light Reading Data',
   'light_col_title'           => 'µmol photons/(m^2 S)',
 
@@ -93,42 +97,6 @@ return [
   'temperature_description'   => 'Temperatures for Bioreactor',
   'temperature_sheet_name'    => 'Temperature Data',
   'temperature_col_title'     => 'Degrees Celsius',
-
-  // gas flow data export
-
-  'gasflows_filename'         => 'gasflows',
-  'gasflows_select'           => 'Gas Flow Readings',
-  'gasflows_data'             => 'Gas Flow Data',
-  'gasflows_description'      => 'Gas Flow for Bioreactor',
-  'gasflows_sheet_name'       => 'Gas Flow Data',
-  'flow_col_title'            => 'mL',
-
-  // light readings data export
-
-  'lightreadings_filename'    => 'lightreadings',
-  'lights_select'             => 'Light Readings',
-  'lightreadings_data'        => 'Light Reading Data',
-  'lightreadings_description' => 'Light Readings for Bioreactor',
-  'lightreadings_sheet_name'  => 'Light Reading Data',
-  'lux_col_title'             => 'µmol photons/(m^2 S)',
-
-  // ph readings data export
-
-  'phreadings_filename'       => 'phreadings',
-  'phs_select'                => 'pH Readings',
-  'phreadings_data'           => 'pH Reading Data',
-  'phreadings_description'    => 'pH Readings for Bioreactor',
-  'phreadings_sheet_name'     => 'pH Reading Data',
-  'ph_col_title'              => 'pH',
-
-  // temperature data export
-
-  'temperatures_filename'     => 'temperatures',
-  'temps_select'              => 'Temperature Readings',
-  // 'temperature_data'          => 'Temperature Data',
-  // 'temperature_col_title'     => 'Temperature',
-  // 'temperature_description'   => 'Temperatures for Bioreactor',
-  // 'temperature_sheet_name'    => 'Temperature Data',
 
   // users data export
 

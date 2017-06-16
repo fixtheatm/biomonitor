@@ -89,7 +89,7 @@
      * format date to "Www Mmm DD YYYY HH:MM (TZ)"
      *
      * @param Date timestamp
-     * @returns String date as Www Mmm DD YYYY HH:MM (TZ)
+     * @returns String date as HH:MM (TZ)
      */
     bin.fmt_hh_mm_tx = function (full) {
         var hr = "0" + full.getHours();
