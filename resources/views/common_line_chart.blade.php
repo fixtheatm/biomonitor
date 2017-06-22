@@ -85,6 +85,25 @@
         return fmtd;
     };// ./fmt_www_mmm_dd_yyyy_hh_mm_tx(…)
 
+    // Mon Jun 19 2017 13:11:00 GMT-0600 (MDT)
+    /**
+     * date to local format that is usable by Carbon::
+     *
+     * ddd mmm dd yyyy hh:mm o (tz)
+     *
+     * @param Date timestamp
+     * @returns String date as Www Mmm DD YYYY HH:MM O (TZ)
+     */
+    bin.fmtLocalDateTime = function (full) {
+      var hr = "0" + full.getHours();
+      var mn = "0" + full.getMinutes();
+      var pts = full.toString().split(" ");
+      var tzo = "0000" + full.getTimezoneOffset();
+
+      var fmtd = cnst.weekday_names[full.getDay()] + " " + cnst.month_names[full.getMonth()] + " " + full.getDate() + " " + full.getFullYear() + " " + hr.substr(hr.length - 2) + ":" + mn.substr(mn.length - 2) + " " + pts[pts.length - 2] + " " + pts[pts.length - 1];
+      return fmtd;
+    }
+
     /**
      * format date to "Www Mmm DD YYYY HH:MM (TZ)"
      *
@@ -213,15 +232,7 @@
         }
     };
     // Data set configuration: all sensors, big graph size
-    base.chartDataSet.big = {
-        scales: {
-            xAxes: [{
-                scaleLabel: {
-                    labelString: "{{ Lang::get('bioreactor.time_axis_big') }}"
-                }
-            }]
-        }
-    };
+    base.chartDataSet.big = {};
     // Data set configuration: all sensors, full graph size
     // Only need 'full' entry when have a single sensor, and with that name,
     // can merge most content from any sensor
@@ -325,7 +336,7 @@
         scales: {
             xAxes: [{
                 scaleLabel: {
-                    labelString: "{{ Lang::get('bioreactor.time_axis_big') }}"
+                    labelString: "{{ Lang::get('bioreactor.time_axis_hhmm') }}"
                 },
                 time: {
                     unit: "minute",
@@ -356,7 +367,7 @@
             }],
             xAxes: [{
                 scaleLabel: {
-                    labelString: "{{ Lang::get('bioreactor.time_axis_full') }}"
+                    labelString: "{{ $interval_count > 10 ? Lang::get('bioreactor.time_axis_time') : Lang::get('bioreactor.time_axis_hhmm') }}"
                 },
                 time: {
                     unit: "{{ $interval_count > 108 ? 'day' :( $interval_count > 10 ? 'hour' : 'minute' )}}",

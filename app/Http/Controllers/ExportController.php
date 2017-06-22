@@ -38,23 +38,33 @@ class ExportController extends Controller
    * @param Request $request - data from the form
    */
   public function export(Request $request) {
+    // dd($request);
+    $this->validate($request, [
+      'datatype_to_excel' => "required|issensor:{$this->getKnownSensors()}",
+      'start_date' => 'required|date',
+      'end_date' => 'required|date',
+    ]);
+
     // Get the deviceid of the Bioreactor that the user has access to
     $deviceid = Auth::user()->deviceid;
     $bioreactor = $this->getBioreactorFromId( $deviceid );
 
-    // dd([$request->datatype_to_excel,$request->start_date,$request->end_date,$request->timezone_offset]);
-    $sensor_name = $request->datatype_to_excel;
+    $sensor_name = $request->input('datatype_to_excel');
+    $tz_offset = $request->input('timezone_offset', '0');
+    // $submit_src = $request->input('submit_export', 'dont really care');
+
     // IDEA TODO handle $sensor_name === 'all'
     // $sensor_names = [ $sensor_name ]; // and iterate always
+    // dd([array_key_exists($sensor_name, $this->sensors),isset($this->sensors[$sensor_name])]);
     $sensor_props = $this->sensors[ $sensor_name ];
 
 
-    // Inspite of the above MDT bug, using numeric timezone offset works correctly
+    // Inspite of the MDT bug, using numeric timezone offset works correctly
     // If the timezone offset from the browser is not a number, use 0
-    $br_tzo = $request->timezone_offset / -60;// Negate hours offset
-    $min_date = Carbon::parse($request->start_date, $br_tzo);
+    $browser_tzo = $tz_offset / -60;// Negate hours offset
+    $min_date = Carbon::parse($request->start_date, $browser_tzo);
     $min_date->setTimeZone(0); // Get input date to UTC for DB compare
-    $max_date = Carbon::parse($request->end_date, $br_tzo);
+    $max_date = Carbon::parse($request->end_date, $browser_tzo);
     $max_date->setTimeZone(0);
     $start_date_str = $min_date->format('Y-m-d H:i:s');
     $end_date_str = $max_date->format('Y-m-d H:i:s');
@@ -64,7 +74,7 @@ class ExportController extends Controller
     $sensor_model =  $sensor_props[ 'full_model' ];
     $data_property = $sensor_props[ 'prop' ];
     // IDEA do not include the deviceid in the db select: report as header instead
-    // IDEA select full recorded_on field, and format for excel date
+    // IDEA select full recorded_on field, and format for excel date (with tz?)
     $this->{ $data_property } = $sensor_model::select(
       'deviceid',
       $sensor_props[ 'data_field' ],

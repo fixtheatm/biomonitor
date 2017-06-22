@@ -45,6 +45,7 @@ Route::group(['middleware' => 'web'], function () {
   Route::get('/home',                     'MybioController@index' );
   Route::get('/global',                   'GlobalController@index' );
   Route::get('/single/{id}',              'GlobalController@show' );
+  Route::post('/fullchart/{id}',          'GlobalController@formgraph' );
   Route::get('/getjson',                  'GlobalController@getjson' );
   Route::get('/mybio',                    'MybioController@index' );
   Route::get('/mytemperatures/{hrs}',     'MybioController@graph' );
@@ -55,7 +56,6 @@ Route::group(['middleware' => 'web'], function () {
   Route::get('/mygasflows',               'MybioController@graph' );
   Route::get('/myphreadings/{hrs}',       'MybioController@graph' );
   Route::get('/myphreadings',             'MybioController@graph' );
-  Route::get('/mytemperatures/{hrs}/{end}',    'MybioController@graph' );
 
   Route::get('/password',                 'PasswordController@show' );
   Route::post('/password',                'PasswordController@update' );

@@ -42,10 +42,6 @@ class Controller extends BaseController
     'mylightreadings' => 'light',
     'mygasflows'      => 'oxygen',
     'myphreadings'    => 'ph',
-    'tsttemperatures' => 'temperature',
-    'tstlightreadings'=> 'light',
-    'tstgasflows'     => 'oxygen',
-    'tstphreadings'   => 'ph'
   ];
 
   // Should be const, but php does not allow const array
@@ -141,6 +137,42 @@ class Controller extends BaseController
 
 
   /**
+   * Handle pseudo class static method calls
+   *
+   * https://stackoverflow.com/questions/29440737/php-init-class-with-a-static-function
+   *
+   * @param $method string name of the method being called
+   * @param $args mixed arguments to be passed to $method
+   */
+  public static function __callStatic($method, $args)
+  {
+    dd([$method,$args]);
+    $instance = new static;
+    // if ($method === 'issensor') {
+    //   return isset($instance->sensors[$args]);
+    // }
+    // return call_user_func_array(array($instance, $method), $args);
+  }
+
+
+  /**
+   * Get a comma delimited string of the known sensors (sensor types)
+   *
+   */
+  public function getKnownSensors()
+  {
+    $csv_sensors = "";
+    foreach ($this->sensors as $sensor_key => $sensor) {
+      $csv_sensors .= $sensor_key;
+      if ($sensor !== end($this->sensors)) {
+        $csv_sensors .= ',';
+      }
+    }
+    return $csv_sensors;
+  }
+
+
+  /**
    * Read the Bioreactor record from the table based on the deviceid
    * parameter. The record is stored in the class as well as being
    * returned
@@ -186,14 +218,9 @@ class Controller extends BaseController
   protected function _getHourlySummarySensorData( $props, $deviceid, $start_time, $end_time )
   {
     // Back to basics with raw DB call, since can't see how to do it using Eloquent
-    // Truncates all the recorded_on details down to just the hour.
-    // In other words we are summarizing the results down to the average or
-    // sum over the hour.
+    // Summarize the results down to the average or sum over the hour
     // IDEA refactor hrs to interval_size, and strftime fmt to parameter
     //  to handle other levels of summarization
-    // TODO check what toDateTimeString() does around daylight time shifts
-    //  data is in UTC, but with no marker to show that, so start before the
-    //  daylight shift, and end after could be a problem
     $r = DB::table( $props['table'])
       ->select( 'deviceid', 'recorded_on',
         DB::raw( 'strftime("%Y%m%d%H",recorded_on) as hrs' ),
@@ -201,33 +228,33 @@ class Controller extends BaseController
       ->groupBy( 'hrs' )
       ->where( 'deviceid', '=', $deviceid )
       ->where( 'recorded_on', '>', $start_time->toDateTimeString())
+      ->where( 'recorded_on', '<=', $end_time->toDateTimeString())
       ->get();
-    // TODO add $end_time to selection where clause
+
+    // align the start and end markers to the summarization interval boundary
+    $hr_time = new Carbon( $end_time );
+    $st_time = new Carbon( $r[0]->recorded_on);
+    $hr_time->minute = 0;
+    $hr_time->second = 0;
+    $st_time->minute = 0;
+    $st_time->second = 0;
 
     // Create array to hold the summarized y data and timestamp
     // The results of the above table get() may be missing data so it may not
     // return the number of hours in the full interval. we need to put zero in first
     $full_period = [];
-    $hr_time = new Carbon( $end_time );
-    $hr_time->minute = 0;
-    $hr_time->second = 0;
-    // IDEA $start_time should be 0 min, 0 seconds as well
-    $interval_count = $hr_time->diffInHours( $start_time ) + 1;
-    // one extra interval, due to end points not being exact interval boundaries
 
     // The full_period array is an array of arrays. this is the format that we can use
     // to backfill the results into the eloquent format using the hydrate call
-    for ( $i = 0; $i <= $interval_count; $i++ ) {
-      // For each interval, make an array holding the summarizated results
-      // TODO as above, check results accross daylight time shift
-      // IDEA is it more appropriate/possible to drop missing records instead?
+    while ( $hr_time >= $st_time ) {
+      // For each interval, create array to hold the summarized results
       $row = [
         'deviceid'            => $deviceid,
         $props['data_field']  => $props['null_value'],
         'recorded_on'         => $hr_time->toDateTimeString()];
-      $full_period[$i] = $row;
+      $full_period[] = $row;
       // TODO handle shifting by other summarization interval sizes
-      $hr_time->subhours(1);
+      $hr_time->subhours(1);// ($shift_hours)
     }
 
     // Overwrite the initial summarized value with the data from the actual
@@ -236,6 +263,7 @@ class Controller extends BaseController
     $hr_time->minute = 0;
     $hr_time->second = 0;
 
+    // IDEA better using foreach($r as $trec) ??
     for ( $i = 0; $i < sizeof( $r ); $i++ ) {
       $trec = new Carbon( $r[$i]->recorded_on );
       $trec->minute = 0;
@@ -253,34 +281,35 @@ class Controller extends BaseController
 
 
   /**
-   * Read the sensor measurement records from the table for a specific deviceid
-   * parameter. The records are stored in the class, loaded in descending order
-   * by dateTime.  In other words the most recent first.
-   * The date the most recent record was recorded is returned.
+   * Load a (date) range of sensor measurement records for a specific deviceid
+   * parameter. The records are stored in the class, in descending order by
+   * dateTime.  In other words, the most recent first.
+   * The date the most recent selected record was recorded is returned.
    *
-   * @param string $sensor Key to $sensor table of (sensor specific) properties
+   * @param string $sensor Key to table of (sensor specific) properties
    * @param string $id The deviceid ex. '00002'
-   * @param int $data_size = 3  Number of hours of data to collect
+   * @param int $data_size Number of hours of data to collect (default 3)
+   * @param int $max_date Most recent date to include in the data (default now)
    *
    * @throws Exception if SQL select fails (no records is ok though)
    *
    * @return Carbon datetime of last record
    */
-  public function getSensorData( $sensor, $id, $data_size=3 )
+  public function getSensorData( $sensor, $id, $data_size=3, $max_date='now' )
   {
     $sensor_props = $this->sensors[ $sensor ];
     $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
 
     $sensor_model =  self::MODEL_PREFIX . $sensor_props[ 'model' ];
-    // https://laracasts.com/discuss/channels/eloquent/access-eloquent-model-dynamically
-    // https://laravel.com/docs/5.2/eloquent Dynamic Scope
+    if ($max_date === 'now') {
+      $max_date = Carbon::now();
+    }
 
-    // Get the last date entry record
-    // TODO use extra (optional) parameter to limit highest date (instead of latest)
-    //   and $recorded_on <= utc date
+    // Get recorded_on date of the last record usable with $max_date
     try {
-      // Temperature::
-      $most_recent_measurement = $sensor_model::where('deviceid', '=', $deviceid)->orderBy('recorded_on', 'desc')->first();
+      $most_recent_measurement = $sensor_model::where('deviceid', '=', $deviceid)
+        ->where('recorded_on', '<=', $max_date->toDateTimeString())
+        ->orderBy('recorded_on', 'desc')->first();
       if ( is_null($most_recent_measurement)) {
         App::abort(404);
       }
@@ -300,13 +329,12 @@ class Controller extends BaseController
     try {
       if ($data_size >= 24) {
         $this->_getHourlySummarySensorData( $sensor_props, $deviceid, $start_time, $last_time );
-        // deviceid, «sensor data field», recorded_on
       }
       else {
-        // TODO limit highest recorded_on date as well
-        // TODO check $start_time->toDateTimeString() is utc
-        $this->{ $sensor_props[ 'prop' ]} = $sensor_model::where('deviceid', '=', $deviceid)->where('recorded_on', '>', $start_time->toDateTimeString() )->orderBy('recorded_on', 'desc')->get();
-        // id, deviceid, temperature, recorded_on, created_at, updated_at
+        $this->{ $sensor_props[ 'prop' ]} = $sensor_model::where('deviceid', '=', $deviceid)
+          ->where('recorded_on', '<=', $last_time->toDateTimeString())
+          ->where('recorded_on', '>', $start_time->toDateTimeString() )
+          ->orderBy('recorded_on', 'desc')->get();
       }
     }
     catch (\Exception $e) {
@@ -315,7 +343,6 @@ class Controller extends BaseController
       //return Redirect::to('error')->with('message', $message);
     }
 
-    //dd($this->{ $sensor_props[ 'prop' ]});
     return $last_time;
   }// ./getSensorData(…)
 

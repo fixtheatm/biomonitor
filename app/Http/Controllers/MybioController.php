@@ -16,9 +16,7 @@ use Route;
 class MybioController extends Controller
 {
   /**
-   * Create a new controller instance.
-   *
-   * @return void
+   * {@inheritdoc}
    */
   public function __construct()
   {
@@ -81,7 +79,7 @@ class MybioController extends Controller
 
     // TODO turn optional $end into time stamp reference to use to get the initial database record
 
-    // Get the associated date from the database for $sensor, for this location,
+    // Get the associated data from the database for $sensor, for this location,
     // and convert it to the format needed by the Chart.js library.
     $chart_data = [];
     $chart_data[$sensor]['end_datetime'] = $this->getSensorData( $sensor, $id, $hrs )->toDateTimeString();

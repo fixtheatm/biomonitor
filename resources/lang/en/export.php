@@ -15,6 +15,8 @@ return [
   'solar_biocells'            => 'Solar BioCells',
   'starting_on'               => 'Starting On',
   'ending_on'                 => 'Ending On',
+  'enter_start_date'          => 'Start Date',
+  'enter_end_date'            => 'End Date',
   'date_recorded_col_title'   => 'Date Recorded',
   'time_recorded_col_title'   => 'Time Recorded',
   'bioreactor_id_col_title'   => 'Bioreactor ID',
@@ -61,6 +63,7 @@ return [
   'bioreactor_email_label'    => 'Email: ',
   'raw_to_spreadsheet_title'  => 'Raw Data Export to Excel',
   'raw_to_spreadsheet_btn'    => 'Raw Data to Excel',
+  'start_export'              => 'Go',
 
   // oxygen production sensor data export
 

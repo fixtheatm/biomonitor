@@ -23,46 +23,51 @@
 <body id="app-layout">
 
 <nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="http://www.solarbiocells.com"><img class="img-rounded" src="/SolarBioCells_Logo_V1.png" alt="SolarBioCells.com"></a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
+  <div class="navbar-header">
+    <button type="button" data-target="#myNavbar" data-toggle="collapse" class="navbar-toggle">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="http://www.solarbiocells.com"><img class="img-rounded" src="/SolarBioCells_Logo_V1.png" alt="SolarBioCells.com logo"></a>
+  </div>
+  <div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
 @if (!Auth::guest())
-        @if ( isset($route) && $route == "mybio")<li class="active">@else<li>@endif<a href="{{ url('/mybio') }}">@lang('menus.user_bio_r')</a></li>
+      @if ( isset($route) && $route == "mybio")<li class="active">@else<li>@endif<a href="{{ url('/mybio') }}">@lang('menus.user_bio_r')</a></li>
 @endif
-        @if ( isset($route) && $route == "global")<li class="active">@else<li>@endif<a href="{{ url('/global') }}">@lang('menus.global')</a></li>
+      @if ( isset($route) && $route == "global")<li class="active">@else<li>@endif<a href="{{ url('/global') }}">@lang('menus.global')</a></li>
 @if (!Auth::guest() && Auth::user()->isadmin)
-        @if ( isset($route) && $route == "users")<li class="active">@else<li>@endif<a href="{{ url('/users') }}">@lang('menus.users')</a></li>
-        @if ( isset($route) && $route == "bioreactors")<li class="active">@else<li>@endif<a href="{{ url('/bioreactors') }}">@lang('menus.all_bio_r')</a></li>
+      @if ( isset($route) && $route == "users")<li class="active">@else<li>@endif<a href="{{ url('/users') }}">@lang('menus.users')</a></li>
+      @if ( isset($route) && $route == "bioreactors")<li class="active">@else<li>@endif<a href="{{ url('/bioreactors') }}">@lang('menus.all_bio_r')</a></li>
 @endif
-        @if ( isset($route) && $route == "about")<li class="active">@else<li>@endif<a href="{{ url('/about') }}">@lang('menus.about')</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <!-- Authentication Links -->
+      @if ( isset($route) && $route == "about")<li class="active">@else<li>@endif<a href="{{ url('/about') }}">@lang('menus.about')</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <!-- Authentication Links -->
 @if (Auth::guest())
-        <li><a href="{{ url('/login') }}">@lang('menus.login')</a></li>
+      <li><a href="{{ url('/login') }}">@lang('menus.login')</a></li>
 @if ( false )
-        <li><a href="{{ url('/register') }}">@lang('menus.register')</a></li>
+      <li><a href="{{ url('/register') }}">@lang('menus.register')</a></li>
 @endif
 @else
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-            {{ Auth::user()->name }}<span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>@lang('menus.logout')</a></li>
-            <li><a href="{{ url('/password') }}"><i class="fa fa-btn fa-lock"></i>@lang('menus.chg_pass')</a></li>
-          </ul>
-        </li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+          {{ Auth::user()->name }}<span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <li><a href="{{ url('/logout') }}"><i class="glyphicon glyphicon-log-out"></i> @lang('menus.logout')</a></li>
+          <li><a href="{{ url('/password') }}"><i class="glyphicon glyphicon-lock"></i> @lang('menus.chg_pass')</a></li>
+        </ul>
+      </li>
 @endif
-      </ul>
-    </div>
+    </ul>
   </div>
 </nav>
 <div class="container">
 @yield('content')
 </div>
+@yield('modal_insert')
 <!-- JavaScripts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>

@@ -13,6 +13,9 @@ return [
     |
     */
 
+    'issensor'             => 'The :attr value must be a known sensor type.',
+    'only_custom'          => 'The :attribute must be a positive integer when a custom interval has been selected.',
+
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',
     'after'                => 'The :attribute must be a date after :date.',
