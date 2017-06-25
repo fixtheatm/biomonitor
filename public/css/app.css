@@ -3,7 +3,7 @@ body {
 }
 
 #raw_data_export_modal {
-  top: 1em;
+  top: 2em;
   position: absolute;
   outline: none;
 }

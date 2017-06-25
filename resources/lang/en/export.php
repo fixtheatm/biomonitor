@@ -68,7 +68,7 @@ return [
   // oxygen production sensor data export
 
   'oxygen_filename'           => 'gasproduction',
-  'oxygen_select'             => 'Gas Production Readings',
+  'oxygen_select'             => 'Gas Production',
   'oxygen_data'               => 'Gas Production Data',
   'oxygen_description'        => 'Gas Production for Bioreactor',
   'oxygen_sheet_name'         => 'Oxygen Data',
@@ -77,7 +77,7 @@ return [
   // light sensor data export
 
   'light_filename'            => 'lightreadings',
-  'light_select'              => 'Light Readings',
+  'light_select'              => 'Light',
   'light_data'                => 'Light Reading Data',
   'light_description'         => 'Light intensity sensor readings for bioreactor',
   'light_sheet_name'          => 'Light Reading Data',
@@ -86,7 +86,7 @@ return [
   // ph sensor data export
 
   'ph_filename'               => 'phreadings',
-  'ph_select'                 => 'pH Readings',
+  'ph_select'                 => 'pH',
   'ph_data'                   => 'pH Reading Data',
   'ph_description'            => 'pH Readings for Bioreactor',
   'ph_sheet_name'             => 'pH Reading Data',
@@ -95,7 +95,7 @@ return [
   // temperature sensor data export
 
   'temperature_filename'      => 'temperatures',
-  'temperature_select'        => 'Temperature Readings',
+  'temperature_select'        => 'Temperature',
   'temperature_data'          => 'Temperature Data',
   'temperature_description'   => 'Temperatures for Bioreactor',
   'temperature_sheet_name'    => 'Temperature Data',

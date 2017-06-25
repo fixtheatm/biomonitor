@@ -142,49 +142,43 @@ $i = -1;
 
 @section('modal_insert')
 @if($show_excel)
-<div class="modal fade modal-dialog modal-content" id="raw_data_export_modal" role="dialog">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
-    <h4 class="modal-title">@lang('export.raw_to_spreadsheet_title')</h4>
-  </div>
-  <div class="modal-body">
-
-    {!! Form::open(array('url' => '/export', 'name' => 'data_export')) !!}
-      <div class="form-group">
-        <div class="table table-condensed table-responsive">
-          <table class="table">
-            <tr class="info">
+<div class="modal fade" id="raw_data_export_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {!! Form::open(array('url' => '/export', 'name' => 'data_export')) !!}
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">@lang('export.raw_to_spreadsheet_title')</h4>
+        </div><!-- .modal-header -->
+        <div class="modal-body container col-sm-12">
+          <div class="row small-gutter">
+            <div class="form-group">
 @foreach ($sensors as $sensor_name => $sensor)
-              <td>
+              <div class="col-sm-3">
                 {!! Form::label( $sensor_name . '_readings', Lang::get( 'export.' . $sensor_name . '_select' )) !!}
                 {!! Form::radio( 'datatype_to_excel', $sensor_name, $sensor_name == 'oxygen', array( 'id' => $sensor_name . '_readings' )) !!}
-              </td>
+              </div><!-- .col- -->
 @endforeach
-            </tr>
-          </table>
-        </div>
-        <div class="table table-condensed table-responsive">
-          <table class="table">
-            <tr class="info">
-              <td>
-                {!! Form::label('start_date', Lang::get( 'export.enter_start_date' )) !!}
-                {!! Form::date('start_date', \Carbon\Carbon::now()) !!}
-              </td>
-              <td>
-                {!! Form::label('end_date', Lang::get( 'export.enter_end_date' )) !!}
-                {!! Form::date('end_date', \Carbon\Carbon::now()) !!}
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
+            </div><!-- .form-group -->
+          </div><!-- .row -->
+          <div class="row">
+            <div class="col-sm-6">
+              {!! Form::label('start_date', Lang::get( 'export.enter_start_date' )) !!}
+              {!! Form::date('start_date', \Carbon\Carbon::now()) !!}
+            </div><!-- .col- -->
+            <div class="col-sm-6">
+              {!! Form::label('end_date', Lang::get( 'export.enter_end_date' )) !!}
+              {!! Form::date('end_date', \Carbon\Carbon::now()) !!}
+            </div><!-- .col- -->
+          </div><!-- .row -->
+        </div><!-- .modal-body -->
 
-      <div class="modal-footer">
-        {{ Form::hidden('timezone_offset', 'tz0') }}
-        {!! Form::submit(Lang::get( 'export.start_export' ), array('class'=>'btn btn-success btn-sm', 'name' => 'submit_export')) !!}
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    {!! Form::close() !!}
+        <div class="modal-footer">
+          {{ Form::hidden('timezone_offset', 'tz0') }}
+          {!! Form::submit(Lang::get( 'export.start_export' ), array('class'=>'btn btn-success btn-sm', 'name' => 'submit_export')) !!}
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><!-- .modal-foooter -->
+        {!! Form::close() !!}
 @if (count($errors) > 0)
       <div class="alert alert-danger">
         <ul>
@@ -194,8 +188,9 @@ $i = -1;
         </ul>
       </div>
 @endif
-  </div>
-</div>
+    </div><!-- .modal-content -->
+  </div><!-- .modal-dialog -->
+</div><!-- .modal -->
 @endif
 
 @foreach ($sensors as $sensor_name => $sensor)
