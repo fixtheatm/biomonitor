@@ -87,6 +87,7 @@ class GlobalController extends Controller
       'interval_count'      => 3,
       'show_excel'          => false,
       'show_button'         => false,
+      'show_inline'         => true,
       'show_graph'          => true,
     ]);
   }// ./show(…)

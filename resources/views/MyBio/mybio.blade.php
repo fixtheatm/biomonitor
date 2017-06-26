@@ -4,7 +4,7 @@
 
 <div class="panel panel-primary">
 
-  @include('common_detail_header', array('show_map' => true, 'show_excel' => $show_excel))
+  @include('common_detail_header', array('show_map' => true))
 
   <div class="panel-body">
     <div class="row" id="sensor-list">
@@ -47,7 +47,7 @@ $i = -1;
 @endforeach
     </div>
 
-@if ( isset($show_graph) && $show_graph )
+@if ( isset($show_inline) && $show_inline )
     <div class="row">
       <h4 class="text-center">{{ Lang::get( 'bioreactor.graph_form_title' ) }}</h4>
       {!! Form::open(array('action' => array('GlobalController@formgraph', $id), 'name' => 'graph_options')) !!}
@@ -249,7 +249,7 @@ $i = -1;
                 </div>
               </fieldset>
             </div>
-            <div class="col-sm-6 col-md-4">
+            <div class="col-sm-6">
               <fieldset>
                 <legend>&nbsp;</legend>
                 <div class="row">
@@ -271,7 +271,7 @@ $i = -1;
         </div><!-- .modal-body -->
 
         <div class="modal-footer">
-          {{ Form::hidden('utc_time_now', \Carbon\Carbon::now()->format('Y-m-d\TH:iO')) }}
+          {{ Form::hidden('utc_time_now2', \Carbon\Carbon::now()->format('Y-m-d\TH:iO')) }}
           {{ Form::hidden('timezone_offset', 'tz0') }}
           {!! Form::submit(Lang::get( 'bioreactor.graph_submit' ), array('class'=>'btn btn-info btn-sm','name'=>'submit_graph2')) !!}
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

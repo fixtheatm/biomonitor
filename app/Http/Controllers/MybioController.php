@@ -59,6 +59,8 @@ class MybioController extends Controller
       'interval_count'      => 3,
       'show_excel'          => true,
       'show_button'         => true,
+      'show_inline'         => false,
+      'show_graph'          => true,
     ]);
   }// ./index()
 
