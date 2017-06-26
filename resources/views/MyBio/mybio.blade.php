@@ -127,7 +127,7 @@ $i = -1;
 @if ( isset($show_graph) && $show_graph )
   <div class="panel-footer">
 @if (count($errors) > 0)
-    <h4>{{ Lang::get( 'bioreactor.bad_grahp_select' ) }}</h4>
+    <h4>{{ Lang::get( 'bioreactor.bad_graph_select' ) }}</h4>
     <ul class="alert alert-danger">
 @foreach ($errors->all() as $er)
       <li>{{ $er }}</li>
@@ -179,6 +179,104 @@ $i = -1;
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div><!-- .modal-foooter -->
         {!! Form::close() !!}
+@if (count($errors) > 0)
+      <div class="alert alert-danger">
+        <ul>
+@foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+@endforeach
+        </ul>
+      </div>
+@endif
+    </div><!-- .modal-content -->
+  </div><!-- .modal-dialog -->
+</div><!-- .modal -->
+@endif
+
+@if ( isset($show_graph) && $show_graph )
+<div class="modal fade" id="full_graph" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {!! Form::open(array('action' => array('GlobalController@formgraph', $id), 'name' => 'graph_options2')) !!}
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">@lang('bioreactor.fullgraph_title')</h4>
+        </div><!-- .modal-header -->
+
+        <div class="modal-body container col-sm-12">
+          <div class="row">
+            <div class="col-sm-3">
+              <fieldset>
+                <legend class="text-center">{{ Lang::get( 'bioreactor.graph_type_legend' ) }}</legend>
+@php ($i = 0)
+@foreach ($sensors as $sensor_name => $sensor)
+@php ($i++)
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::radio( 'sensor_to_graph', $sensor_name, $sensor_name == 'oxygen', array( 'id' => $sensor_name . '_graph2' )) !!}
+                    {!! Form::label( $sensor_name . '_graph2', Lang::get( 'export.' . $sensor_name . '_select' )) !!}
+                  </div>
+                </div>
+@endforeach
+              </fieldset>
+            </div>
+            <div class="col-sm-3">
+              <fieldset>
+                <legend class="text-center">{{ Lang::get( 'bioreactor.interval_legend' ) }}</legend>
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::radio( 'graph_interval', '3', true, array( 'id' => 'int_3_hrs2' )) !!}
+                    {!! Form::label( 'int_3_hrs2', Lang::get( 'bioreactor.interval_3_hours' )) !!}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::radio( 'graph_interval', '24', false, array( 'id' => 'int_24_hrs2' )) !!}
+                    {!! Form::label( 'int_24_hrs2', Lang::get( 'bioreactor.interval_1_day' )) !!}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::radio( 'graph_interval', '168', false, array( 'id' => 'int_168_hrs2' )) !!}
+                    {!! Form::label( 'int_168_hrs2', Lang::get( 'bioreactor.interval_1_week' )) !!}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::radio( 'graph_interval', 'custom', false, array( 'id' => 'int_input_hrs2' )) !!}
+                    {!! Form::label( 'int_input_hrs2', Lang::get( 'bioreactor.interval_custom' )) !!}
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <fieldset>
+                <legend>&nbsp;</legend>
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::label('hours2', Lang::get( 'bioreactor.custom_interval' )) !!}
+                    {!! Form::number('hours2', null, array('optional', 'placeholder' => '3', 'style' => 'width: 5em;')) !!}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    {!! Form::label('graph_end_date2', Lang::get( 'export.enter_end_date' )) !!}
+                    {{-- Carbon is way more flexible than any of the html date and time input types.  Just use plain text, and let laravel handle it --}}
+                    {!! Form::text('graph_end_date2', \Carbon\Carbon::now(), array('style' => 'width: 100%;')) !!}
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div><!-- .modal-body -->
+
+        <div class="modal-footer">
+          {{ Form::hidden('utc_time_now', \Carbon\Carbon::now()->format('Y-m-d\TH:iO')) }}
+          {{ Form::hidden('timezone_offset', 'tz0') }}
+          {!! Form::submit(Lang::get( 'bioreactor.graph_submit' ), array('class'=>'btn btn-info btn-sm','name'=>'submit_graph2')) !!}
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div><!-- .modal-foooter -->
+      {!! Form::close() !!}
 @if (count($errors) > 0)
       <div class="alert alert-danger">
         <ul>

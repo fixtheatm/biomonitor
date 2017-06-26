@@ -46,6 +46,8 @@ return [
   'custom_interval'           => 'Custom Interval (hours)',
   'graph_submit'              => 'Show Full Graph',
   'graph_form_title'          => 'Select options for full sensor data graph',
+  'fullgraph_btn'             => 'Full Graph',
+  'fullgraph_title'           => 'Full Graph options',
 
   // sensor specific
   'oxygen_title'              => 'Gas Production',
