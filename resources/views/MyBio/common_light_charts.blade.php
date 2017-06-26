@@ -15,16 +15,6 @@
     // Handled by chartDataSet[ 'full' ]
     base.chartDataSet["full{{ $sensor_name }}"] = {};
 
-    base.chartOptions["small{{ $sensor_name }}"] = {
-        scales: {
-            yAxes: [{
-                scaleLabel: {
-                    labelString: "{{ Lang::get('bioreactor.' . $sensor_name . '_axis_small') }}"
-                }
-            }]
-        }
-    };
-
     // Need to find a way to prevent the php expansion from converting the utf-8
     // character to encoded form.  I *want& µ here, not &micro;
     // alert("{{ Lang::get('bioreactor.intensity_small') }}");
@@ -32,6 +22,7 @@
     // alert("{{ 'µ' }}");
     // alert("µ");
     // Only the final hard-coded string actually works
+    // Options for all light sensor charts, regardless of the graph size
     base.chartOptions["{{ $sensor_name }}"] = {
         scales: {
             yAxes: [{

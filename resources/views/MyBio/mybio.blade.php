@@ -28,7 +28,7 @@ $i = -1;
       <div class="{{ clearForBlock($i) }}"><!-- {{ $i }} --></div>
 @endif
       <div class="col-sm-3 col-lg-2">
-        <h4>{{ $sensor['title'] }}</h4>
+        <h4 class="text-center">{{ $sensor['title'] }}</h4>
         <a href='#' data-toggle="modal" data-target="#{{ $sensor_name }}_modal"><canvas id="{{ $sensor_name }}_canvas"></canvas></a>
 @if($show_button)
         <div class="row small-gutter">
@@ -303,9 +303,7 @@ $i = -1;
 {{-- without specifying $sensor_name :: will be last from previous foreach --}}
 @include('common_line_chart')
 @foreach ($sensors as $sensor_name => $sensor)
-@if(stream_resolve_include_path('MyBio.common_' . $sensor_name . '_charts'))
 @include('MyBio.common_' . $sensor_name . '_charts')
-@endif
 @endforeach
 
 <script>
@@ -342,7 +340,15 @@ $i = -1;
       $(this)["value"] = (new Date()).getTimezoneOffset();
     })
 
-    $("[name='graph_end_date']")[0]["value"] = bin.fmtLocalDateTime(new Date($("[name='utc_time_now']")[0]['value']));
+    var end_fields = $("[name='graph_end_date']");
+    if (end_fields.length > 0 ) {
+      $(end_fields)[0]["value"] = bin.fmtLocalDateTime(new Date($("[name='utc_time_now']")[0]['value']));
+    }
+    // TODO: either remove one of these, or use foreach
+    var end_fields = $("[name='graph_end_date2']");
+    if (end_fields.length > 0 ) {
+      $(end_fields)[0]["value"] = bin.fmtLocalDateTime(new Date($("[name='utc_time_now2']")[0]['value']));
+    }
 }());// anonymous function()
 </script>
 

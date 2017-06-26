@@ -201,11 +201,11 @@
     Chart.defaults.global.responsive = true;
     Chart.defaults.global.responsiveAnimationDuration = 0;
     Chart.defaults.global.defaultFontFamily = "'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
-    Chart.defaults.global.defaultFontColor = "#000";
+    Chart.defaults.global.defaultFontColor = "black";
     Chart.defaults.global.defaultFontSize = 12;
     Chart.defaults.global.title.display = true;
     Chart.defaults.global.title.display = "unimplemented";
-    Chart.defaults.global.title.fontSize = 16;
+    Chart.defaults.global.title.fontSize = 20;
     Chart.defaults.global.legend.display = false;
     Chart.defaults.global.hover.mode = "nearest";
     Chart.defaults.global.hover.intersect = false;
@@ -255,7 +255,8 @@
                 },
                 scaleLabel: {
                     display: true,
-                    fontSize: 14
+                    fontSize: 16,
+                    fontStyle: 'bold'
                 }
             }],
             xAxes: [{
@@ -272,7 +273,8 @@
                 },
                 scaleLabel: {
                     display: true,
-                    fontSize: 14
+                    fontSize: 16,
+                    fontStyle: 'bold'
                 }
             }]
         },
@@ -292,7 +294,8 @@
         scales: {
             yAxes: [{
                 scaleLabel: {
-                    fontSize: 12
+                    fontSize: 12,
+                    fontStyle: 'normal'
                 },
                 ticks: {
                     fontSize: 8
