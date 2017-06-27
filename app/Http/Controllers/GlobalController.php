@@ -103,19 +103,26 @@ class GlobalController extends Controller
   public function formgraph( Request $request, $id )
   {
     $this->validate($request, [
-      'sensor_to_graph' => "required|issensor:{$this->getKnownSensors()}",
+      'sensor_to_graph' => "required|issensor:{$this->getKnownSensors()}|either:hours,hours2|either:graph_end_date,graph_end_date2",
       'graph_interval' => 'required',
       'graph_end_date' => 'date',
-      'hours' => 'only_custom',
+      'hours' => 'only_custom:graph_interval',
+      'graph_end_date2' => 'date',
+      'hours2' => 'only_custom:graph_interval',
     ]);
+    $form_attributes = $request->input();
     $sensor_name = $request->input('sensor_to_graph');
     $tz_offset = $request->input('timezone_offset', '0');
-    // $submit_src = $request->input('submit_graph', 'dont really care');
     $browser_tzo = $tz_offset / -60;// Negate hours offset
-    $max_date = Carbon::parse($request->input('graph_end_date'), $browser_tzo);
+
+    // dd(array_key_exists( 'hours', $form_attributes), array_key_exists( 'hours2', $form_attributes), array_key_exists( 'graph_end_date', $form_attributes), array_key_exists( 'graph_end_date2', $form_attributes), array_key_exists( 'submit_inline', $form_attributes), array_key_exists( 'submit_graph', $form_attributes));
+
+    $max_date = Carbon::parse(
+      $request->input('graph_end_date',
+      $request->input('graph_end_date2', 'noenddate')), $browser_tzo);
     $max_date->setTimeZone(0);
     $hrs = intval(($request->input('graph_interval') === 'custom') ?
-      $request->input('hours') :
+      $request->input('hours', $request->input('hours2', 0)) :
       $request->input('graph_interval'));
 
     // dd([$id, $sensor_name, $hrs, $max_date, $request]);

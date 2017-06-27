@@ -101,7 +101,7 @@ $i = -1;
             <div class="row">
               <div class="col-sm-12">
                 {!! Form::label('hours', Lang::get( 'bioreactor.custom_interval' )) !!}
-                {!! Form::number('hours', null, array('optional', 'placeholder' => '3', 'style' => 'width: 5em;')) !!}
+                {!! Form::number('hours', null, array('placeholder' => '3', 'style' => 'width: 5em;')) !!}
               </div>
             </div>
             <div class="row">
@@ -115,7 +115,7 @@ $i = -1;
               <div class="col-sm-12">
                 {{ Form::hidden('utc_time_now', \Carbon\Carbon::now()->format('Y-m-d\TH:iO')) }}
                 {{ Form::hidden('timezone_offset', 'tz0') }}
-                {!! Form::submit(Lang::get( 'bioreactor.graph_submit' ), array('class'=>'btn btn-success btn-sm','name'=>'submit_graph')) !!}
+                {!! Form::submit(Lang::get( 'bioreactor.graph_submit' ), array('class'=>'btn btn-success btn-sm','name'=>'submit_inline')) !!}
               </div>
             </div>
           </fieldset>
@@ -255,7 +255,7 @@ $i = -1;
                 <div class="row">
                   <div class="col-sm-12">
                     {!! Form::label('hours2', Lang::get( 'bioreactor.custom_interval' )) !!}
-                    {!! Form::number('hours2', null, array('optional', 'placeholder' => '3', 'style' => 'width: 5em;')) !!}
+                    {!! Form::number('hours2', null, array('placeholder' => '3', 'style' => 'width: 5em;')) !!}
                   </div>
                 </div>
                 <div class="row">
@@ -273,7 +273,7 @@ $i = -1;
         <div class="modal-footer">
           {{ Form::hidden('utc_time_now2', \Carbon\Carbon::now()->format('Y-m-d\TH:iO')) }}
           {{ Form::hidden('timezone_offset', 'tz0') }}
-          {!! Form::submit(Lang::get( 'bioreactor.graph_submit' ), array('class'=>'btn btn-info btn-sm','name'=>'submit_graph2')) !!}
+          {!! Form::submit(Lang::get( 'bioreactor.graph_submit' ), array('class'=>'btn btn-info btn-sm','name'=>'submit_graph')) !!}
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div><!-- .modal-foooter -->
       {!! Form::close() !!}

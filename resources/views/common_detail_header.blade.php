@@ -24,7 +24,7 @@
 @endif
 @if ( isset($show_graph) && $show_graph )
             <a class="btn btn-info btn-sm" href='#' data-toggle="modal" data-target="#full_graph">
-              @lang('bioreactor.fullgraph_btn')</span>
+              @lang('bioreactor.fullgraph_btn') <span class="fa fa-bar-chart-o"></span>
             </a>
 @endif
           </div>

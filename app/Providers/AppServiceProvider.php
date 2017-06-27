@@ -32,15 +32,35 @@ class AppServiceProvider extends ServiceProvider
 
       Validator::extend('only_custom', function ($attribute, $value, $parameters, $validator) {
         $form_attributes = $validator->attributes();
-        // dd([$form_attributes, array_key_exists( 'graph_interval', $form_attributes), $form_attributes['graph_interval'] === 'custom');
-        // When graph_interval is 'custom', $value must be a (string containing
-        // a) positive integer
-        return (array_key_exists( 'graph_interval', $form_attributes) &&
-            $form_attributes['graph_interval'] === 'custom') ?
+        // dd($attribute, $value, $parameters, count($parameters), $validator, $form_attributes);
+
+        // Coding error check: must have a parameter, and it must match the
+        // name of one of the form attributes
+        if (count($parameters) < 1 || !array_key_exists( $parameters[0], $form_attributes)) {
+          dd('Invalid validation call arguments', $parameters, $form_attributes);
+        }
+        // When the parameter attribute is 'custom', $value must be a (string
+        // containing a) positive integer
+        return ($form_attributes[$parameters[0]] === 'custom') ?
             (filter_var($value, FILTER_VALIDATE_INT) + 0 > 0) :
-              true;
+            true;
       });
 
+      Validator::extend('either', function ($attribute, $value, $parameters, $validator) {
+        $form_attributes = $validator->attributes();
+        // verify that at least one of the specified (in $parameters) form
+        // attributes exists
+        $found_attr = false;
+        foreach($parameters as $attr_key) {
+          if (array_key_exists( $attr_key, $form_attributes)) {
+            $found_attr = true;
+            break;
+          }
+        }
+        // dd($attribute, $value, $parameters, $form_attributes, $found_attr);
+        return $found_attr;
+        // return Controller::issensor($value);
+      });
     }
 
 
