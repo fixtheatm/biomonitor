@@ -21,6 +21,9 @@ return [
   'email'                   => 'Email: ',
   'phone'                   => 'Phone: ',
 
+  // more
+  'no_api_datatype'         => 'Error: no data type [dtype] specified',
+
   // Date related
 
   // Day of the week, starting from 0 == Sunday

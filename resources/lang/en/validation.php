@@ -14,8 +14,9 @@ return [
     */
 
     'issensor'             => 'The :attr value must be a known sensor type.',
-    'only_custom'          => 'The :attribute must be a positive integer when a custom interval has been selected.',
+    'only_custom'          => 'The hours field must be a positive integer when a custom :attribute has been selected.',
     'either'               => 'One of the tested form parameters must exist.',
+    'notempty'             => ':attribute can not be empty when used.',
 
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',

@@ -33,11 +33,7 @@
         }
     };
     base.chartOptions["small{{ $sensor_name }}"] = {};
-    base.chartOptions["big{{ $sensor_name }}"] = {
-        title: {
-            text: "{{ Lang::get('bioreactor.' . $sensor_name . '_chart_title_big') }}"
-        }
-    };
+    base.chartOptions["big{{ $sensor_name }}"] = {};
     // Handled by chartOptions[ 'full' ]
     base.chartOptions["full{{ $sensor_name }}"] = {};
 }());// anonymous function()

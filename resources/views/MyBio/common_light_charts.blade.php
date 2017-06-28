@@ -50,9 +50,6 @@
                     labelString: "µmol photons/(m^2 S)"
                 }
             }]
-        },
-        title: {
-            text: "{{ Lang::get('bioreactor.' . $sensor_name . '_chart_title_big') }}"
         }
     };
     // Handled by chartOptions[ 'full' ]

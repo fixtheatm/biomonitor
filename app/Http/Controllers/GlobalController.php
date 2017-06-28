@@ -55,41 +55,19 @@ class GlobalController extends Controller
    *
    * Selected from the global map or from the global list
    *
-   * @param string $id = deviceid of the bioreactor ex. 00001
+   * @param string $id deviceid of the bioreactor ex. 00001
    */
   public function show( $id )
   {
-    $bioreactor = $this->getBioreactorFromId( $id );
-
-    // For each sensor, get the associated data from the database for this
-    // location.  Convert the data to the format needed by the Chart.js library.
-    // x holds time labels (hh:mm), y holds the data
-    $chart_data = [];
-    foreach ($this->sensors as $sensor => $props) {
-      // TODO refactor: MyBioController::index
-      $chart_data[$sensor]['end_datetime'] = $this->getSensorData( $sensor, $id )->toDateTimeString();
-      if ( is_null( $this->{ $props[ 'prop' ]} )) {
-        $this->{ $props[ 'prop' ]} = array();
-      }
-      $chart_data[$sensor]['xy_data'] = $this->_buildXYMeasurementData( $sensor );
-      $chart_data[$sensor]['title'] = Lang::get('bioreactor.' . $sensor . '_title' );
-      $chart_data[$sensor]['point_count'] = count( $chart_data[$sensor]['xy_data'] );
-    }
-    // dd( $chart_data );
-
-    // pass data into the view
-    return view( 'MyBio.mybio', [
-      'id'                  => $id,
-      'bioreactor'          => $bioreactor,
-      'date_constants'      => $this->localized_date_names,
+    list($view_spec, $view_parm) = $this->bioreactorSiteView( $id );
+    // dd($view_spec, $view_parm);
+    return view( $view_spec, array_replace([], $view_parm, [
       'header_title'        => 'Bioreactor #' . $id,
-      'sensors'             => $chart_data,
-      'interval_count'      => 3,
       'show_excel'          => false,
       'show_button'         => false,
       'show_inline'         => true,
       'show_graph'          => true,
-    ]);
+    ]));
   }// ./show(…)
 
 
@@ -97,18 +75,15 @@ class GlobalController extends Controller
    * Graph a block of sensor measurements for a bioreactor based on form data
    *
    * @param Request $request graph configuration information from the form
-   * @param int $hrs default 3. number of hours of data to view.
-   * ?@param int $end default now. the most recent (recorded_on) measurement to show
+   * @param $id string bioreactor id
    */
   public function formgraph( Request $request, $id )
   {
     $this->validate($request, [
       'sensor_to_graph' => "required|issensor:{$this->getKnownSensors()}|either:hours,hours2|either:graph_end_date,graph_end_date2",
-      'graph_interval' => 'required',
+      'graph_interval' => 'required|only_custom:hours,hours2',
       'graph_end_date' => 'date',
-      'hours' => 'only_custom:graph_interval',
       'graph_end_date2' => 'date',
-      'hours2' => 'only_custom:graph_interval',
     ]);
     $form_attributes = $request->input();
     $sensor_name = $request->input('sensor_to_graph');
@@ -126,49 +101,7 @@ class GlobalController extends Controller
       $request->input('graph_interval'));
 
     // dd([$id, $sensor_name, $hrs, $max_date, $request]);
-    return $this->fullgraph( $id, $sensor_name, $hrs, $max_date);
+    list($view_spec, $view_parm) = $this->sensorGraphFullView( $id, $sensor_name, $hrs, $max_date );
+    return view( $view_spec, $view_parm );
   }// ./formgraph(…)
-
-
-  /**
-   * Graph a block of sensor measurements for a bioreactor
-   *
-   * @param Request $request graph configuration information from the form
-   * @param int $hrs default 3. number of hours of data to view.
-   * ?@param int $end default now. the most recent (recorded_on) measurement to show
-   */
-  public function fullgraph( $id, $sensor, $hrs=3, $end='now')
-  {
-    $sensor_props = $this->sensors[ $sensor ];
-    $id = Bioreactor::formatDeviceid( $id );
-
-    // TODO Global.sensor_graph is small, and only @included from MyBio/…bio.blade
-    //  could merge to there, and delete the file
-
-    // Get the associated data from the database for $sensor, for this location,
-    // and convert it to the format needed by the Chart.js library.
-    $chart_data = [];
-    $chart_data[$sensor]['end_datetime'] = $this->getSensorData( $sensor, $id, $hrs, $end )->toDateTimeString();
-    if ( is_null( $this->{ $sensor_props[ 'prop' ]} )) {
-      $this->{ $sensor_props[ 'prop' ]} = array();
-    }
-    $chart_data[$sensor]['xy_data'] = $this->_buildXYMeasurementData( $sensor, $hrs );
-    $chart_data[$sensor]['point_count'] = count( $chart_data[$sensor]['xy_data'] );
-
-    // pass the formatted data to the view
-    // TODO ?move? to Global.full_graph
-    return view( 'MyBio.sensor_graph', [
-      'id'              => $id,
-      'bioreactor'      => $this->getBioreactorFromId( $id ),
-      'date_constants'  => $this->localized_date_names,
-      'header_title'    => Lang::get('bioreactor.' . $sensor . '_graph_page_title'),
-      'sensors'         => $chart_data,
-      'value_field'     => $sensor_props[ 'data_field' ],
-      'value_label'     => Lang::get('bioreactor.' . $sensor . '_head'),
-      'dbdata'          => $this->{ $sensor_props[ 'prop' ]},
-      'interval_count'  => $hrs,
-      'show_excel'      => false,
-      'show_button'     => false,
-    ]);
-  }// ./fullgraph(…)
 }

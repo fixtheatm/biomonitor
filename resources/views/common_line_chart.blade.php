@@ -203,9 +203,6 @@
     Chart.defaults.global.defaultFontFamily = "'Lato', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif";
     Chart.defaults.global.defaultFontColor = "black";
     Chart.defaults.global.defaultFontSize = 12;
-    Chart.defaults.global.title.display = true;
-    Chart.defaults.global.title.display = "unimplemented";
-    Chart.defaults.global.title.fontSize = 20;
     Chart.defaults.global.legend.display = false;
     Chart.defaults.global.hover.mode = "nearest";
     Chart.defaults.global.hover.intersect = false;
@@ -226,10 +223,7 @@
     base.chartDataSet.small = {
         pointRadius: 1,
         pointHoverRadius: 5,
-        pointHoverBorderWidth: 1,
-        title: {
-            display: false
-        }
+        pointHoverBorderWidth: 1
     };
     // Data set configuration: all sensors, big graph size
     base.chartDataSet.big = {};
@@ -346,6 +340,9 @@
                     unitStepSize: 10
                 }
             }]
+        },
+        title: {
+            display: false
         }
     };
 
@@ -379,6 +376,8 @@
             }]
         },
         title: {
+            display: true,
+            fontSize: 20,
             text: "{{ Lang::get('bioreactor.' . $sensor_name . '_chart_title_full') }}"
         }
     };

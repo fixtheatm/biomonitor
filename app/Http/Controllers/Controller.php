@@ -63,7 +63,7 @@ class Controller extends BaseController
       'prop'        => 'gasflows',
       'route'       => '/mygasflows',
       'model'       => 'Gasflow',
-      // 'full_model'  => self::MODEL_PREFIX + 'Gasflow', // syntax error with either "." or "+" operator here
+      // 'model'  => self::MODEL_PREFIX + 'Gasflow', // syntax error with either "." or "+" operator here
       'table'       => 'gasflows',
       'data_field'  => 'flow',
       'summarize'   => 'sum',
@@ -130,8 +130,7 @@ class Controller extends BaseController
       $this->localized_date_names['month'] = $names;
 
       foreach ($this->sensors as &$sensor) {
-        $sensor['full_model'] = self::MODEL_PREFIX . $sensor['model'];
-        // $sensor['model'] = self::MODEL_PREFIX . $sensor['model'];
+        $sensor['model'] = self::MODEL_PREFIX . $sensor['model'];
       }
   }
 
@@ -205,6 +204,104 @@ class Controller extends BaseController
 
 
   /**
+   * Collect data details needed to create a single sensor graph
+   *
+   * Add the details for a single sensor to the array of information used by
+   * the graphing functions.
+   *
+   * @param $graph_data array by reference to add the sensor details to
+   * @param $sensor string sensor name (identifier)
+   * @param $sensor_props array sensor properties
+   * @param $id string bioreactor id
+   * @param $title string graph title, default empty string
+   * @param $hours integer number of hours of data to collect, default 3
+   * @param $end date the most recent (recorded_on) measurement to show, default now
+   *
+   * @return null
+   */
+  protected function loadSensorData( & $graph_data, $sensor, $sensor_props, $id,
+      $title='', $hours=3, $end='now' )
+  {
+    $graph_data[$sensor]['end_datetime'] = $this->getSensorData( $sensor, $id,
+      $hours, $end )->toDateTimeString();
+    if ( is_null( $this->{ $sensor_props[ 'prop' ]} )) {
+      $this->{ $sensor_props[ 'prop' ]} = array();
+    }
+    $graph_data[$sensor]['xy_data'] = $this->_buildXYMeasurementData( $sensor, $hours );
+    $graph_data[$sensor]['route'] = $sensor_props[ 'route' ]; // to build btn href
+    $graph_data[$sensor]['title'] = $title;
+    $graph_data[$sensor]['point_count'] = count( $graph_data[$sensor]['xy_data'] );
+  }// ./loadSensorData(…)
+
+
+  /**
+   * Base data and parameters to show current sensor graphs for a single bioreactor
+   *
+   * @param string $id deviceid of the bioreactor ex. 00001
+   *
+   * @return array with view path and base parameters
+   */
+  protected function bioreactorSiteView( $id )
+  {
+    // For each configured sensor, get the associated data from the database for
+    // this location.  Convert data to the format needed by the Chart.js library.
+    $chart_data = [];
+    foreach ($this->sensors as $sensor => $props) {
+      $this->loadSensorData( $chart_data, $sensor, $props, $id,
+        Lang::get('bioreactor.' . $sensor . '_title' ));
+    }
+    // dd( $chart_data );
+
+    // data to pass into the view
+    return [ 'MyBio.mybio', [
+      'id'                  => $id,
+      'bioreactor'          => $this->getBioreactorFromId( $id ),
+      'date_constants'      => $this->localized_date_names,
+      'sensors'             => $chart_data,
+      'interval_count'      => 3
+    ]];
+  }// ./bioreactorSiteView(…)
+
+
+  /**
+   * Base data and parameters to show a graph for a single sensor
+   *
+   * @param string $id bioreactor deviceid ex. 00001
+   * @param string $sensor the identifier for the sensor
+   * @param int $hrs default 3. number of hours of data to view.
+   * @param int $end default now. the most recent (recorded_on) measurement to show
+   *
+   * @return array with view path and parameters
+   */
+  protected function sensorGraphFullView( $id, $sensor, $hrs=3, $end='now' )
+  {
+    $sensor_props = $this->sensors[ $sensor ];
+    $id = Bioreactor::formatDeviceid( $id );
+
+    // Get the associated data from the database for $sensor, for this location,
+    // and convert it to the format needed by the Chart.js library.
+    $chart_data = [];
+    $this->loadSensorData( $chart_data, $sensor, $sensor_props, $id, '', $hrs, $end );
+
+    // pass the formatted data to the view
+    // TODO ?move? to Global.full_graph
+    return [ 'MyBio.sensor_graph', [
+      'id'              => $id,
+      'bioreactor'      => $this->getBioreactorFromId( $id ),
+      'date_constants'  => $this->localized_date_names,
+      'header_title'    => Lang::get('bioreactor.' . $sensor . '_graph_page_title'),
+      'sensors'         => $chart_data,
+      'value_field'     => $sensor_props[ 'data_field' ],
+      'value_label'     => Lang::get('bioreactor.' . $sensor . '_head'),
+      'dbdata'          => $this->{ $sensor_props[ 'prop' ]},
+      'interval_count'  => $hrs,
+      'show_excel'      => false,
+      'show_button'     => false,
+    ]];
+  }// ./sensorGraphFullView(…)
+
+
+  /**
    * Read the sensor measurement records from the table for a specific
    * deviceid parameter. The records are summarized by the hour.
    *
@@ -275,7 +372,7 @@ class Controller extends BaseController
     }
 
     // Put constructed array into the Collection format that we need
-    $sensor_model =  self::MODEL_PREFIX . $props[ 'model' ];
+    $sensor_model =  $props[ 'model' ];
     $this->{ $props['prop'] } = $sensor_model::hydrate( $full_period );
   }// ./_getHourlySummarySensorData(…)
 
@@ -300,7 +397,7 @@ class Controller extends BaseController
     $sensor_props = $this->sensors[ $sensor ];
     $deviceid = Bioreactor::formatDeviceid($id); // format to 00000
 
-    $sensor_model =  self::MODEL_PREFIX . $sensor_props[ 'model' ];
+    $sensor_model =  $sensor_props[ 'model' ];
     if ($max_date === 'now') {
       $max_date = Carbon::now();
     }

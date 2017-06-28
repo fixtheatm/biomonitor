@@ -22,7 +22,6 @@ class AppServiceProvider extends ServiceProvider
         // verify that $value exists in Controller::sensors
         // dd([$attribute, $value, $parameters, $validator, in_array($value, $parameters)]);
         return in_array($value, $parameters);
-        // return Controller::issensor($value);
       });
       Validator::replacer('issensor', function($message, $attribute, $rule, $parameters) {
         // dd([$message, $attribute, $rule, $parameters, str_replace(':attr', $attribute, $message)]);
@@ -31,19 +30,29 @@ class AppServiceProvider extends ServiceProvider
       });
 
       Validator::extend('only_custom', function ($attribute, $value, $parameters, $validator) {
-        $form_attributes = $validator->attributes();
-        // dd($attribute, $value, $parameters, count($parameters), $validator, $form_attributes);
-
-        // Coding error check: must have a parameter, and it must match the
-        // name of one of the form attributes
-        if (count($parameters) < 1 || !array_key_exists( $parameters[0], $form_attributes)) {
-          dd('Invalid validation call arguments', $parameters, $form_attributes);
+        // Coding error check: must have a parameter
+        if (count($parameters) < 1) {
+          dd('Invalid validation call arguments: attribute name required', $parameters);
         }
-        // When the parameter attribute is 'custom', $value must be a (string
-        // containing a) positive integer
-        return ($form_attributes[$parameters[0]] === 'custom') ?
-            (filter_var($value, FILTER_VALIDATE_INT) + 0 > 0) :
-            true;
+
+        $found_attr = true;
+        // dd($attribute, $value, $parameters, count($parameters), $validator);
+        if ($value === 'custom') {
+          // The source attribute value is 'custom', so (at least) one of the
+          // passed parameters must be an attribute name that is (a string
+          // containing) a postive integer.
+          $form_attributes = $validator->attributes();
+          $found_attr = false;
+          foreach ($parameters as $attr_key) {
+            if (array_key_exists( $attr_key, $form_attributes) &&
+                filter_var($form_attributes[$attr_key], FILTER_VALIDATE_INT) + 0 > 0) {
+              $found_attr = true;
+              break;
+            }
+          }
+        }
+        // Either not 'custom', or found non-empty attribute
+        return $found_attr;
       });
 
       Validator::extend('either', function ($attribute, $value, $parameters, $validator) {
@@ -59,7 +68,6 @@ class AppServiceProvider extends ServiceProvider
         }
         // dd($attribute, $value, $parameters, $form_attributes, $found_attr);
         return $found_attr;
-        // return Controller::issensor($value);
       });
     }
 

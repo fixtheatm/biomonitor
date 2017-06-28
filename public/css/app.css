@@ -39,6 +39,12 @@ body {
   padding-right: 3px;
 }
 
+.modal_chart_title {
+  font-size: 20px;
+  font-weight: 900;
+  /*font-weight: bolder;*/
+}
+
 .table-fixed thead {
   width: 98%;
   /*tweak to be 100% minus vertical scrollbar width*/

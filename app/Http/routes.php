@@ -16,17 +16,7 @@ Route::post('/pigasflow',   'PagesController@pigasflow');
 Route::post('/pilight',     'PagesController@pilight');
 Route::post('/piph',        'PagesController@piph');
 
-// Following routes are for testing only: can be removed for production
-// Route::get('/addgasflows',  'TestDataController@addgasflows');
-// Route::get('/addlight',      'TestDataController@addlight');
-// Route::get('/addtemps',      'TestDataController@addtemps');
-// Route::get('/addph',        'TestDataController@addph');
-// Route::get('/addbioreactors',  'TestDataController@addbioreactors');
-// Route::get('/addusers',      'TestDataController@addusers');
-
-
 Route::get('/api',          'ApiController@api');
-
 
 /*
 |--------------------------------------------------------------------------

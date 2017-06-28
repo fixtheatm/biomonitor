@@ -114,8 +114,7 @@ class ApiController extends Controller
         return $ph_data;
         break;
       default:
-        // TODO put text into lang file
-        return "Error: no data type [dtype] specified";
+        return Lang::get('messages.no_api_datatype');
         break;
     }
   }

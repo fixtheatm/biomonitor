@@ -24,7 +24,7 @@ return [
   'time_axis_time'            => 'Time',
   'after_end_time'            => '',
   'before_end_time'           => ' Ending at: ',
-  'end_time_prefix'           => 'Ending at: ',
+  'end_time_prefix'           => '                      Ending at: ',
   'end_time_suffix'           => '',
 
   // full graph requests
@@ -56,7 +56,7 @@ return [
   'oxygen_axis_big'           => 'mL',
   'oxygen_axis_full'          => 'mL',
   'oxygen_chart_title_big'    => 'Gas Production vs Time',
-  'oxygen_chart_title_full'   => 'Photo BioReactor Gas Production vs Time',
+  'oxygen_chart_title_full'   => 'Photo BioReactor Gas Production versus Time',
 
   'light_title'               => 'Light',
   'light_head'                => 'micro mols photons / (m^2 S)',
@@ -64,8 +64,8 @@ return [
   'light_axis_big'            => 'µmol photons/(m^2 S)',
   'light_axis_full_fail'      => 'µmol photons/(m^2 S)',
   'light_axis_full'           => 'micro mol photons/(m^2 S)',
-  'light_chart_title_big'     => 'Light vs Time',
-  'light_chart_title_full'    => 'Photo BioReactor Light versus Time',
+  'light_chart_title_big'     => 'Light Intensity vs Time',
+  'light_chart_title_full'    => 'Photo BioReactor Light Intensity versus Time',
 
   'ph_title'                  => 'pH',
   'ph_head'                   => 'pH',

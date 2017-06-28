@@ -47,9 +47,6 @@
                     labelString: "{{ Lang::get('bioreactor.' . $sensor_name . '_axis_big') }}"
                 }
             }]
-        },
-        title: {
-            text: "{{ Lang::get('bioreactor.' . $sensor_name . '_chart_title_big') }}"
         }
     };
     // Handled by chartOptions[ 'full' ]

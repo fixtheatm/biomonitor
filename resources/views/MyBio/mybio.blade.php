@@ -292,13 +292,28 @@ $i = -1;
 @endif
 
 @foreach ($sensors as $sensor_name => $sensor)
-@include('Global.sensor_graph')
+<div class="modal fade" id="{{ $sensor_name }}_modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="padding-bottom:3px;">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title text-center modal_chart_title"> &nbsp; @lang('bioreactor.' . $sensor_name . '_chart_title_big')</h4>
+      </div>
+      <div class="modal-body" style="padding-top:3px;padding-bottom:5px;">
+        <div style='width:100%;height:280px'><canvas id="big_{{ $sensor_name }}_canvas"></canvas></div>
+      </div>
+      <div class="modal-footer" style="padding-top:5px;">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endforeach
 
 @stop
 
 @section('footer_js')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 
 {{-- without specifying $sensor_name :: will be last from previous foreach --}}
 @include('common_line_chart')

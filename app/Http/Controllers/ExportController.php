@@ -70,8 +70,7 @@ class ExportController extends Controller
     $end_date_str = $max_date->format('Y-m-d H:i:s');
 
     // get database records based on the deviceid and the date range
-    // $sensor_model =  self::MODEL_PREFIX . $sensor_props[ 'model' ];
-    $sensor_model =  $sensor_props[ 'full_model' ];
+    $sensor_model =  $sensor_props[ 'model' ];
     $data_property = $sensor_props[ 'prop' ];
     // IDEA do not include the deviceid in the db select: report as header instead
     // IDEA select full recorded_on field, and format for excel date (with tz?)
