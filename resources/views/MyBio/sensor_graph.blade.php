@@ -73,12 +73,11 @@ dbdata count {{ count( $dbdata ) }} -->
 
 (function () {
     "use strict";
-    var base = document.com.solarbiocells.biomonitor;
-    var bin = base.bin;
-
+    var bin = document.com.solarbiocells.biomonitor.bin;
     // The raw data points that will be used with whatever chart is being displayed
 @foreach ($sensors as $sensor_name => $sensor)
-    var graphPoints = [@foreach ($sensor['xy_data'] as $pt){x: {{ $pt['x'] }}000, y: {{ $pt['y'] }}}@if ($pt !== end($sensor['xy_data'])), @endif{{-- --}}@endforeach];
+<? $idx = 0; ?>{{--  add ', ' before each new entry, except for the first --}}
+    var graphPoints = [@foreach ($sensor['xy_data'] as $pt)@if ($idx++ !== 0), @endif{x: {{ $pt['x'] }}000, y: {{ $pt['y'] }}}@endforeach];
 @endforeach
     bin.populateScatterChart("chart_canvas", "full", "{{ $sensor_name }}", graphPoints);
 }());// anonymous function()

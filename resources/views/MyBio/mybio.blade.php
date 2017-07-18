@@ -332,18 +332,19 @@ $i = -1;
 
     // Populate each of the small graph canvases
 @foreach ($sensors as $sensor_name => $sensor)
-    base.{{ $sensor_name }}Points = [@foreach ($sensor['xy_data'] as $pt){x: {{ $pt['x'] }}000, y: {{ $pt['y'] }}}@if ($pt !== end($sensor['xy_data'])), @endif{{-- --}}@endforeach];
+<? $idx = 0; ?>{{--  add ', ' before each new entry, except for the first --}}
+    base.{{ $sensor_name }}Points = [@foreach ($sensor['xy_data'] as $pt)@if ($idx++ !== 0), @endif{x: {{ $pt['x'] }}000, y: {{ $pt['y'] }}}@endforeach];
     bin.populateScatterChart("{{ $sensor_name }}_canvas", "small", "{{ $sensor_name }}", base.{{ $sensor_name }}Points);
 @endforeach
 
     // Populate each of the big graph canvases after the rest of the document loads
-@foreach ($sensors as $sensor_name => $sensor)
     $(document).ready(function () {
+@foreach ($sensors as $sensor_name => $sensor)
         $("#{{ $sensor_name }}_modal").on("shown.bs.modal", function () {
             bin.populateScatterChart("big_{{ $sensor_name }}_canvas", "big", "{{ $sensor_name }}", base.{{ $sensor_name }}Points);
         });
-    });
 @endforeach
+    });
 
     // Fill in user (actually browser) timezone information, to help out with
     // generic date values.
