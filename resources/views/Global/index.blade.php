@@ -50,7 +50,7 @@
 @stop
 
 @section('footer_js')
-  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCtJVb73Zj_lBFRn9ERE1AxgPaAOYB1XWc"></script>
   <script type="text/javascript" src="/js/ui/jquery.ui.map.js"></script>
 
   <script type="text/javascript">

@@ -33,8 +33,8 @@ class UserTableSeeder extends Seeder
           'description' => 'dummy bioreactor to support administration operations',
           'deviceid' => '00000',
           'active' => '0',
-          'latitude' => '51.079948',
-          'longitude' => '-114.125534',
+          'latitude' => '51.081062',
+          'longitude' => '-114.129454',
           'created_at' => Carbon::now()->toDateTimeString(),
           'updated_at' => Carbon::now()->toDateTimeString()
         ]);
